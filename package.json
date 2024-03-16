@@ -1,21 +1,68 @@
 {
   "name": "test",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.tsx --quiet",
+    "clean:build:android": "rm -rf android/app/build",
+    "prod:android": "npm run clean:build:android  && react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
+    "@gluestack-style/react": "^1.0.49",
+    "@gluestack-ui/config": "^1.1.16",
+    "@gluestack-ui/themed": "^1.1.9",
+    "@react-native-async-storage/async-storage": "1.21.0",
+    "@react-native-masked-view/masked-view": "0.3.0",
+    "@react-native/metro-config": "^0.73.5",
+    "@react-navigation/bottom-tabs": "^6.5.7",
+    "@react-navigation/drawer": "^6.6.3",
+    "@react-navigation/native": "^6.1.7",
+    "@react-navigation/native-stack": "^6.9.15",
+    "@react-navigation/stack": "^6.3.17",
+    "@types/react": "~18.0.38",
+    "axios": "^1.6.7",
     "expo": "~50.0.11",
+    "expo-blur": "~12.9.2",
+    "expo-haptics": "~12.8.1",
+    "expo-linear-gradient": "~12.7.2",
+    "expo-localization": "~14.8.3",
+    "expo-splash-screen": "^0.26.4",
     "expo-status-bar": "~1.11.1",
+    "i18n-js": "3.8.0",
     "react": "18.2.0",
-    "react-native": "0.73.4"
+    "react-native": "0.73.4",
+    "react-native-country-flag": "^2.0.2",
+    "react-native-fusioncharts": "^5.2.3",
+    "react-native-gesture-handler": "~2.14.0",
+    "react-native-keyboard-aware-scroll-view": "0.9.4",
+    "react-native-maps": "1.10.0",
+    "react-native-reanimated": "~3.6.2",
+    "react-native-svg": "14.1.0",
+    "react-native-tab-view": "^3.5.2",
+    "react-native-webview": "^13.8.1r",
+    "typescript": "^5.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-native-community/eslint-config": "2.0.0",
+    "@types/i18n-js": "3.8.1",
+    "@types/react": "18.0.38",
+    "@types/react-native": "0.67.6",
+    "eslint": "7.28.0",
+    "jest-expo": "~50.0.3",
+    "typescript": "^5.3.0"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
+    ]
+  }
 }
