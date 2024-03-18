@@ -72,21 +72,21 @@ export default function DetailsPage({ route }) {
       });
 
       dataset.push({
-        seriesname: "CashAndCashEquivalents",
+        seriesname: "Cash and CashEquivalents",
         data: company.BalanceSheetStatements.map((statement) => ({
           value: statement.CashAndCashEquivalents,
         })),
       });
 
       dataset.push({
-        seriesname: "TotalEquity",
+        seriesname: "Total Equity",
         data: company.BalanceSheetStatements.map((statement) => ({
           value: statement.TotalEquity,
         })),
       });
 
       dataset.push({
-        seriesname: "TotalDebt",
+        seriesname: "Total Debt",
         data: company.BalanceSheetStatements.map((statement) => ({
           value: statement.TotalDebt,
         })),

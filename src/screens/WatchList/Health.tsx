@@ -133,7 +133,7 @@ export default function Health(props) {
         <Text h5 white marginVertical={sizes.sm}>
           Financial Position Analysis
         </Text>
-        <VerticalBarChart />
+        <VerticalBarChart data={props.FPA} />
         <Text h5 white marginVertical={sizes.sm}>
           Debt to Equity History and Analysis
         </Text>

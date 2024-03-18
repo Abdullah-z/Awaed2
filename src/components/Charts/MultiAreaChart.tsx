@@ -22,6 +22,8 @@ export default function MultiAreaChart(props) {
         theme: "fusion",
         bgColor: colors.tertiary,
         showYAxisValues: "0",
+        numberprefix:
+          props.data?.[0]?.BalanceSheetStatements?.[0]?.ReportedCurrency,
       },
       categories: props?.data?.categories,
       dataset: props?.data?.dataset,

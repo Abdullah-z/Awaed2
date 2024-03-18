@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
 import { useTheme } from "../../hooks";
 
-const VerticalBarChart = () => {
+const VerticalBarChart = (props) => {
   const { colors, sizes } = useTheme();
 
   const chartConfig = {
@@ -17,9 +17,12 @@ const VerticalBarChart = () => {
         // caption: "Summer Olympics Medal Tally",
         // subcaption: "By Countries",
         // yaxisname: "Count of Medals",
+        showYAxisValues: "0",
         numvisibleplot: "8",
         labeldisplay: "auto",
         theme: "fusion",
+        numberprefix:
+          props.data?.[0]?.BalanceSheetStatements?.[0]?.ReportedCurrency,
       },
       categories: [
         {
@@ -35,24 +38,29 @@ const VerticalBarChart = () => {
       ],
       dataset: [
         {
-          seriesname: "Assets",
+          seriesname: "Investments",
           data: [
             {
-              value: "121",
+              value:
+                props.data?.[0]?.BalanceSheetStatements?.[0]
+                  ?.ShortTermInvestments,
             },
             {
-              value: "70",
+              value:
+                props.data?.[0]?.BalanceSheetStatements?.[0]
+                  ?.LongTermInvestments,
             },
           ],
         },
         {
-          seriesname: "Liabilities",
+          seriesname: "Debt",
           data: [
             {
-              value: "123",
+              value:
+                props.data?.[0]?.BalanceSheetStatements?.[0]?.ShortTermDebt,
             },
             {
-              value: "71",
+              value: props.data?.[0]?.BalanceSheetStatements?.[0]?.LongTermDebt,
             },
           ],
         },
