@@ -1,7 +1,7 @@
 import { View, ScrollView, Image } from "react-native";
 import React from "react";
 import { Block, Text } from "../../components";
-import { useTheme } from "../../hooks";
+import { useData, useTheme } from "../../hooks";
 import {
   AddIcon,
   Avatar,
@@ -24,7 +24,7 @@ import PriceVolatility from "../../components/Charts/PriceVolatility";
 
 export default function Overview(props) {
   const { colors, sizes } = useTheme();
-  console.log(props.info);
+  const { portfolio, setPortfolio } = useData();
 
   // Preparing the chart data
   const chartData = [
@@ -121,15 +121,29 @@ export default function Overview(props) {
 
           <Block marginVertical={sizes.s}>
             <Button
-              bgColor={colors.white}
-              width={"45%"}
-              size="sm"
-              variant="solid"
-              action="primary"
-              isDisabled={false}
-              isFocusVisible={false}
+              onPress={() => {
+                const existingIndex = portfolio.findIndex(
+                  (item) => item.symb === props.info[0]?.Code
+                );
+                if (existingIndex !== -1) {
+                  setPortfolio((oldData) => {
+                    const newData = [...oldData];
+                    newData.splice(existingIndex, 1);
+                    return newData;
+                  });
+                } else {
+                  setPortfolio((oldData) => [
+                    ...oldData,
+                    { symb: props.info[0]?.Code },
+                  ]);
+                }
+              }}
             >
-              <ButtonText color={colors.black}>Add to Portfolio</ButtonText>
+              <ButtonText color={colors.black}>
+                {portfolio.some((item) => item.symb === props.info[0]?.Code)
+                  ? "Remove from Portfolio"
+                  : "Add to Portfolio"}
+              </ButtonText>
             </Button>
           </Block>
           <Block row>
@@ -183,7 +197,7 @@ export default function Overview(props) {
             </Block>
           </Block>
           <Block justify="center">
-            <Radar />
+            <Radar bgcolor={colors.tertiary} />
             <Text white>Snowflake Analysis</Text>
             <Text gray>
               Exceptional growth potential with outstanding track record
@@ -359,16 +373,16 @@ export default function Overview(props) {
           <Block>
             <ScrollView style={{ marginTop: sizes.s }} horizontal>
               <Block width={300} marginHorizontal={sizes.s}>
-                <Radar />
+                <Radar bgcolor={colors.tertiary} />
               </Block>
               <Block width={300} marginHorizontal={sizes.s}>
-                <Radar />
+                <Radar bgcolor={colors.tertiary} />
               </Block>
               <Block width={300} marginHorizontal={sizes.s}>
-                <Radar />
+                <Radar bgcolor={colors.tertiary} />
               </Block>
               <Block width={300} marginHorizontal={sizes.s}>
-                <Radar />
+                <Radar bgcolor={colors.tertiary} />
               </Block>
             </ScrollView>
           </Block>

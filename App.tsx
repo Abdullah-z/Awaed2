@@ -7,12 +7,15 @@ import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { config } from "@gluestack-ui/config";
 import { View } from "react-native";
 import { Text } from "./src/components";
+import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 
 export default function App() {
   return (
     <DataProvider>
       <GluestackUIProvider config={config}>
-        <AppNavigation />
+        <AutocompleteDropdownContextProvider>
+          <AppNavigation />
+        </AutocompleteDropdownContextProvider>
       </GluestackUIProvider>
     </DataProvider>
 

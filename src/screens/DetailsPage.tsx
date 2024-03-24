@@ -13,6 +13,7 @@ import Ownership from "./WatchList/Ownership";
 import Information from "./WatchList/Information";
 import CommonDataService from "../services/common-data-service";
 import { SERVICE_ROUTE } from "../services/endpoints";
+import Loading from "../components/Loading";
 
 export default function DetailsPage({ route }) {
   const [index, setIndex] = React.useState(0);
@@ -21,8 +22,7 @@ export default function DetailsPage({ route }) {
   const [keyHealthInfo, setKeyHealthInfo] = useState();
   const [finPositionAnalysis, setFinPositionAnalysis] = useState();
   const [debtEquityHistory, setDebtEquityHistory] = useState();
-
-  console.log("finp:", JSON.stringify(debtEquityHistory));
+  const [loading, setLoading] = useState(0);
 
   const { colors } = useTheme();
   const [routes] = React.useState([
@@ -72,7 +72,7 @@ export default function DetailsPage({ route }) {
       });
 
       dataset.push({
-        seriesname: "Cash and CashEquivalents",
+        seriesname: "Cash and Cash Equivalents",
         data: company.BalanceSheetStatements.map((statement) => ({
           value: statement.CashAndCashEquivalents,
         })),
@@ -97,36 +97,39 @@ export default function DetailsPage({ route }) {
   }
 
   const GetInformation = async () => {
-    // setLoading(true);
+    setLoading(loading + 1);
     await commonDataService
       .fetchData(`api/symbol?$filter=Code eq '${symb}'&$expand=Profile`)
       .then(
         async (res) => {
+          setLoading(loading - 1);
           setInformation(res?.data?.value);
         },
         (error) => {
-          // setLoading(false);
+          setLoading(loading - 1);
           console.log("error" + error);
         }
       );
   };
 
   const GetManagementInfo = async () => {
-    // setLoading(true);
+    setLoading(loading + 1);
     await commonDataService
       .fetchData(`api/symbol?$filter=Code eq '${symb}'&$expand=KeyExecutives`)
       .then(
         async (res) => {
+          setLoading(loading - 1);
           setManagementInfo(res?.data?.value);
         },
         (error) => {
-          // setLoading(false);
+          setLoading(loading - 1);
           console.log("error on text plain" + error);
         }
       );
   };
 
   const GetKeyInfo = async () => {
+    setLoading(loading + 1);
     await commonDataService
       .executeApiCall(
         "api/symbol/$query",
@@ -134,10 +137,12 @@ export default function DetailsPage({ route }) {
         "plain/text"
       )
       .then(async (res) => {
+        setLoading(loading - 1);
         setKeyHealthInfo(res.data.value);
         // Assuming data property holds response content
       })
       .catch((error) => {
+        setLoading(loading - 1);
         console.log(
           "key info error:",
           error.response ? error.response.data : error
@@ -146,6 +151,7 @@ export default function DetailsPage({ route }) {
   };
 
   const GetFinPositionAnalysis = async () => {
+    setLoading(loading + 1);
     await commonDataService
       .executeApiCall(
         "api/symbol/$query",
@@ -153,9 +159,11 @@ export default function DetailsPage({ route }) {
         "plain/text"
       )
       .then(async (res) => {
+        setLoading(loading - 1);
         setFinPositionAnalysis(res.data.value);
       })
       .catch((error) => {
+        setLoading(loading - 1);
         console.log(
           "key info error:",
           error.response ? error.response.data : error
@@ -164,6 +172,7 @@ export default function DetailsPage({ route }) {
   };
 
   const GetDebtEquityHistory = async () => {
+    setLoading(loading + 1);
     await commonDataService
       .executeApiCall(
         "api/symbol/$query",
@@ -171,12 +180,14 @@ export default function DetailsPage({ route }) {
         "plain/text"
       )
       .then(async (res) => {
+        setLoading(loading - 1);
         const result = transformData(res.data.value);
 
         setDebtEquityHistory(result);
         // Assuming data property holds response content
       })
       .catch((error) => {
+        setLoading(loading - 1);
         console.log(
           "key info error:",
           error.response ? error.response.data : error
@@ -193,19 +204,22 @@ export default function DetailsPage({ route }) {
   }, []);
 
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      swipeEnabled={false}
-      onIndexChange={setIndex}
-      renderTabBar={(props) => (
-        <TabBar
-          {...props}
-          scrollEnabled={true}
-          indicatorStyle={{ backgroundColor: colors.info }}
-          style={{ backgroundColor: colors.background }}
-        />
-      )}
-    />
+    <>
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        swipeEnabled={false}
+        onIndexChange={setIndex}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            scrollEnabled={true}
+            indicatorStyle={{ backgroundColor: colors.info }}
+            style={{ backgroundColor: colors.background }}
+          />
+        )}
+      />
+      {loading > 0 ? <Loading /> : <></>}
+    </>
   );
 }

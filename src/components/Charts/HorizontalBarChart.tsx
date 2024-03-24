@@ -18,7 +18,7 @@ const HorizontalBarChart = () => {
   const chartConfig = {
     type: "bar2D",
     width: "100%",
-    height: 300,
+    height: 200,
     dataFormat: "json",
     dataSource: {
       chart: {
@@ -29,9 +29,16 @@ const HorizontalBarChart = () => {
         // yAxisName: "Reserves (MMbbl)",
         // numberSuffix: "K",
         theme: "fusion",
+        labelFontColor: "#ffffff",
+        showYAxisValues: "0",
+        divlinealpha: "0",
         exportEnabled: 0, // to enable the export chart functionality
       },
-      data: chartData,
+      data: chartData.map((item) => ({
+        value: item.value,
+        color: "#2394DF", // Change bar color to blue
+        label: item.label,
+      })),
     },
   };
   return <ReactNativeFusionCharts chartConfig={chartConfig} />;

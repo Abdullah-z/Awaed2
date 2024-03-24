@@ -3,9 +3,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { Articles, Components, Home, Profile, Register, Pro } from "../screens";
 import { useScreenOptions, useTranslation } from "../hooks";
-import Test from "../screens/Test";
 import BottomNav from "./BottomNav";
 import DetailsPage from "../screens/DetailsPage";
+import { Test } from "../screens/Search";
 
 const Stack = createStackNavigator();
 
@@ -16,7 +16,7 @@ export default () => {
   return (
     <Stack.Navigator
       screenOptions={screenOptions.stack}
-      initialRouteName="Home"
+      initialRouteName="Dashboard"
     >
       <Stack.Screen
         name="Home"
@@ -31,12 +31,6 @@ export default () => {
       />
 
       <Stack.Screen name="DetailsPage" component={DetailsPage} />
-
-      <Stack.Screen
-        name="Test"
-        component={Test}
-        options={screenOptions.components}
-      />
 
       <Stack.Screen
         name="Articles"

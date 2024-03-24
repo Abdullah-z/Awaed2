@@ -56,7 +56,7 @@ export default function Health(props) {
           </Block>
         </Block>
         <Block>
-          <Divider bgColor="$blueGray600" marginVertical={sizes.s} />
+          <Divider bgColor="$blueGray800" marginVertical={sizes.s} />
           <Block row>
             <Block>
               <Text gray>Interest coverage ratio</Text>
@@ -67,7 +67,7 @@ export default function Health(props) {
               </Text>
             </Block>
           </Block>
-          <Divider bgColor="$blueGray600" marginVertical={sizes.s} />
+          <Divider bgColor="$blueGray800" marginVertical={sizes.s} />
           <Block row>
             <Block>
               <Text gray>Cash</Text>
@@ -78,7 +78,7 @@ export default function Health(props) {
               </Text>
             </Block>
           </Block>
-          <Divider bgColor="$blueGray600" marginVertical={sizes.s} />
+          <Divider bgColor="$blueGray800" marginVertical={sizes.s} />
           <Block row>
             <Block>
               <Text gray>Equity</Text>
@@ -95,7 +95,7 @@ export default function Health(props) {
               </Text>
             </Block>
           </Block>
-          <Divider bgColor="$blueGray600" marginVertical={sizes.s} />
+          <Divider bgColor="$blueGray800" marginVertical={sizes.s} />
           <Block row>
             <Block>
               <Text gray>Total liabilities</Text>
@@ -112,7 +112,7 @@ export default function Health(props) {
               </Text>
             </Block>
           </Block>
-          <Divider bgColor="$blueGray600" marginVertical={sizes.s} />
+          <Divider bgColor="$blueGray800" marginVertical={sizes.s} />
           <Block row>
             <Block>
               <Text gray>Total assets</Text>

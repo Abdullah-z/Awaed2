@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
 import { useTheme } from "../../hooks";
 
-const Radar = () => {
+const Radar = (props) => {
   const { colors, sizes } = useTheme();
   const chartConfig = {
     type: "radar", // your chart type goes here
@@ -13,7 +13,7 @@ const Radar = () => {
     dataFormat: "json",
     dataSource: {
       chart: {
-        bgColor: colors.background,
+        bgColor: props.bgcolor,
         // caption: "Skill Analysis of Harry",
         // subcaption: "Scale: 1 (low) to 5 (high)",
         theme: "fusion",
@@ -23,6 +23,7 @@ const Radar = () => {
         showlimits: "0",
         showvalues: "0",
         plotfillalpha: "40",
+        labelFontColor: "#ffffff",
         plottooltext: "Harry's <b>$label</b> skill is rated as <b>$value</b>",
       },
       categories: [

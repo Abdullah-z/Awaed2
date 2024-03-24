@@ -21,6 +21,7 @@ export default function DonutChart() {
         defaultcenterlabel: "",
         aligncaptionwithcanvas: "0",
         captionpadding: "0",
+        labelFontColor: "#ffffff",
 
         decimals: "1",
         plottooltext:
@@ -31,6 +32,7 @@ export default function DonutChart() {
         {
           label: "Earnings",
           value: "1067550000",
+          color: "#2394DF",
         },
       ],
     },

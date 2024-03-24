@@ -16,7 +16,16 @@ export default function AreaChart() {
         // subcaption: "2007-2016",
         plottooltext: "<div><b>$dataValue</b> iPhones sold in $label</div>",
         theme: "fusion",
+        labelFontColor: "#ffffff",
         bgColor: colors.tertiary,
+        divlinealpha: "0",
+        showPlotBorder: true,
+        plotBorderThickness: 4,
+        drawFullAreaBorder: 0,
+        plotBorderColor: "2394DF",
+
+        plotFillColor: "#1C3E5A",
+        showYAxisValues: "0",
       },
       data: [
         {

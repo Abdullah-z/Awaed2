@@ -20,7 +20,7 @@ export default function Valuation(props) {
             Is {props.info[0]?.Code} undervalued compared to its fair value,
             analyst forecasts and its price relative to the market?
           </Text>
-          <Radar />
+          <Radar bgcolor={colors.card} />
           <Text gray semibold>
             Valuation Score
           </Text>

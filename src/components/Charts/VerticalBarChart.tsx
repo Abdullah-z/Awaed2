@@ -21,6 +21,10 @@ const VerticalBarChart = (props) => {
         numvisibleplot: "8",
         labeldisplay: "auto",
         theme: "fusion",
+        divlinealpha: "0",
+        labelFontColor: "#ffffff",
+        // legendItemFontColor: "#ffffff",
+        legendPosition: "bottom-left",
         numberprefix:
           props.data?.[0]?.BalanceSheetStatements?.[0]?.ReportedCurrency,
       },

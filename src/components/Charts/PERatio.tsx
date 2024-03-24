@@ -29,6 +29,10 @@ const PERatio = () => {
         // yAxisName: "Reserves (MMbbl)",
         // numberSuffix: "K",
         theme: "fusion",
+        divlinealpha: "0",
+        labelFontColor: "#ffffff",
+        color: "#1C3E5A",
+        showYAxisValues: "0",
         exportEnabled: 0, // to enable the export chart functionality
       },
       data: chartData,

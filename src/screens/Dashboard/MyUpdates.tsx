@@ -1,5 +1,5 @@
-import {View, useWindowDimensions} from 'react-native';
-import React from 'react';
+import { View, useWindowDimensions } from "react-native";
+import React from "react";
 import {
   Avatar,
   AvatarFallbackText,
@@ -10,25 +10,26 @@ import {
   Divider,
   FavouriteIcon,
   StarIcon,
-} from '@gluestack-ui/themed';
-import {useData, useTheme} from '../../hooks';
-import {ScrollView} from 'react-native-gesture-handler';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import {Block, Image, Text} from '../../components';
+} from "@gluestack-ui/themed";
+import { useData, useTheme } from "../../hooks";
+import { ScrollView } from "react-native-gesture-handler";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Block, Image, Text } from "../../components";
 
 export default function MyUpdates() {
-  const {isDark} = useData();
-  const {sizes, colors, gradients, assets} = useTheme();
+  const { isDark } = useData();
+  const { sizes, colors, gradients, assets } = useTheme();
   console.log(isDark);
-  const {handleIsDark} = useData();
+  const { handleIsDark } = useData();
 
   return (
     <ScrollView>
       <Block marginHorizontal={sizes.xs} marginTop={sizes.s}>
         <Block
-          style={{borderColor: colors.gray, borderWidth: 1, borderRadius: 10}}
-          width={'50%'}
-          padding={sizes.s}>
+          style={{ borderColor: colors.gray, borderWidth: 1, borderRadius: 10 }}
+          width={"50%"}
+          padding={sizes.s}
+        >
           <Text h5>PK Market</Text>
           <Block row marginTop={sizes.sm}>
             <Block>
@@ -77,7 +78,8 @@ export default function MyUpdates() {
             <Text
               marginTop={sizes.s}
               marginLeft={sizes.xs}
-              marginBottom={sizes.sm}>
+              marginBottom={sizes.sm}
+            >
               Rather than worrying about switching offices every couple years,
               you can instead stay in the same location.
             </Text>
@@ -91,7 +93,7 @@ export default function MyUpdates() {
           <Image
             resizeMode="contain"
             source={assets?.photo2}
-            style={{height: 114}}
+            style={{ height: 114 }}
           />
           <Block padding={sizes.s} justify="space-between">
             <Text gray>Last Week</Text>
@@ -111,7 +113,8 @@ export default function MyUpdates() {
         padding={sizes.s}
         tertiary
         marginTop={sizes.s}
-        marginBottom={sizes.s}>
+        marginBottom={sizes.s}
+      >
         <Block>
           <Block row>
             <Text p info>
@@ -149,7 +152,8 @@ export default function MyUpdates() {
         <Block marginTop={sizes.s}>
           <Block row align="center">
             <View
-              style={{width: '10%', marginTop: sizes.s, alignItems: 'center'}}>
+              style={{ width: "10%", marginTop: sizes.s, alignItems: "center" }}
+            >
               <Ionicons
                 name="megaphone-outline"
                 size={20}
@@ -163,9 +167,10 @@ export default function MyUpdates() {
             </View>
             <View
               style={{
-                width: '90%',
+                width: "90%",
                 marginLeft: sizes.s,
-              }}>
+              }}
+            >
               <Text>
                 Microsoft Corporation announes quarterly dividend, payable on
                 March 20,2025
@@ -173,8 +178,8 @@ export default function MyUpdates() {
             </View>
           </Block>
           <Block row>
-            <View style={{width: '10%'}}></View>
-            <View style={{width: '90%', marginLeft: sizes.s}}>
+            <View style={{ width: "10%" }}></View>
+            <View style={{ width: "90%", marginLeft: sizes.s }}>
               <Text gray>25 Nov</Text>
             </View>
           </Block>
@@ -182,7 +187,8 @@ export default function MyUpdates() {
         <Block marginTop={sizes.s}>
           <Block row align="center">
             <View
-              style={{width: '10%', marginTop: sizes.s, alignItems: 'center'}}>
+              style={{ width: "10%", marginTop: sizes.s, alignItems: "center" }}
+            >
               <Ionicons
                 name="newspaper-outline"
                 size={20}
@@ -196,9 +202,10 @@ export default function MyUpdates() {
             </View>
             <View
               style={{
-                width: '90%',
+                width: "90%",
                 marginLeft: sizes.s,
-              }}>
+              }}
+            >
               <Text>
                 What is Microsoft Corporation's (NASDARQ:MSFT) Share Price
                 Doing?
@@ -206,8 +213,8 @@ export default function MyUpdates() {
             </View>
           </Block>
           <Block row>
-            <View style={{width: '10%'}}></View>
-            <View style={{width: '90%', marginLeft: sizes.s}}>
+            <View style={{ width: "10%" }}></View>
+            <View style={{ width: "90%", marginLeft: sizes.s }}>
               <Text gray>22 Nov</Text>
             </View>
           </Block>
@@ -215,27 +222,29 @@ export default function MyUpdates() {
         <Block marginTop={sizes.s}>
           <Block row align="center">
             <View
-              style={{width: '10%', marginTop: sizes.s, alignItems: 'center'}}>
+              style={{ width: "10%", marginTop: sizes.s, alignItems: "center" }}
+            >
               <Avatar size="sm">
                 <AvatarFallbackText>SS</AvatarFallbackText>
                 <AvatarImage
                   source={{
-                    uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60',
+                    uri: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60",
                   }}
                 />
               </Avatar>
             </View>
             <View
               style={{
-                width: '90%',
+                width: "90%",
                 marginLeft: sizes.s,
-              }}>
+              }}
+            >
               <Text>Narative update form Bailey</Text>
             </View>
           </Block>
           <Block row>
-            <View style={{width: '10%'}}></View>
-            <View style={{width: '90%', marginLeft: sizes.s}}>
+            <View style={{ width: "10%" }}></View>
+            <View style={{ width: "90%", marginLeft: sizes.s }}>
               <Text gray>25 Nov</Text>
               <Text gray>
                 After days of back and forth, Altman and OpenAI have reached an
@@ -263,12 +272,13 @@ export default function MyUpdates() {
               </Block>
               <Block align="flex-end">
                 <Button
-                  width={'75%'}
+                  width={"75%"}
                   size="xs"
                   variant="outline"
                   action="secondary"
                   isDisabled={false}
-                  isFocusVisible={false}>
+                  isFocusVisible={false}
+                >
                   <ButtonIcon
                     as={StarIcon}
                     marginRight={sizes.s}
@@ -294,12 +304,13 @@ export default function MyUpdates() {
               </Block>
               <Block align="flex-end">
                 <Button
-                  width={'75%'}
+                  width={"75%"}
                   size="xs"
                   variant="outline"
                   action="secondary"
                   isDisabled={false}
-                  isFocusVisible={false}>
+                  isFocusVisible={false}
+                >
                   <ButtonIcon
                     as={StarIcon}
                     color={colors.icon}
