@@ -18,6 +18,7 @@ import {
   ARTICLES,
 } from "../constants/mocks";
 import { light, dark } from "../constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const DataContext = React.createContext({});
 
@@ -33,18 +34,42 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [article, setArticle] = useState<IArticle>({});
   const [portfolio, setPortfolio] = useState([]);
   console.log("folio", portfolio);
-  // get isDark mode from storage
+
+  const storePortfolio = async () => {
+    try {
+      await AsyncStorage.setItem("PORTFOLIO_KEY", JSON.stringify(portfolio));
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("PORTFOLIO_KEY");
+      if (value !== null) {
+        setPortfolio(JSON.parse(value));
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
+  useEffect(() => {
+    retrieveData();
+  }, []);
+
+  useEffect(() => {
+    storePortfolio();
+  }, [portfolio]);
+
   const getIsDark = useCallback(async () => {
-    // get preferance gtom storage
     const isDarkJSON = await Storage.getItem("isDark");
 
     if (isDarkJSON !== null) {
-      // set isDark / compare if has updated
       setIsDark(JSON.parse(isDarkJSON));
     }
   }, [setIsDark]);
 
-  // handle isDark mode
   const handleIsDark = useCallback(
     (payload: boolean) => {
       // set isDark / compare if has updated
@@ -55,7 +80,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     [setIsDark]
   );
 
-  // handle users / profiles
   const handleUsers = useCallback(
     (payload: IUser[]) => {
       // set users / compare if has updated
@@ -66,7 +90,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     [users, setUsers]
   );
 
-  // handle user
   const handleUser = useCallback(
     (payload: IUser) => {
       // set user / compare if has updated
@@ -77,7 +100,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     [user, setUser]
   );
 
-  // handle Article
   const handleArticle = useCallback(
     (payload: IArticle) => {
       // set article / compare if has updated
@@ -88,12 +110,10 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     [article, setArticle]
   );
 
-  // get initial data for: isDark & language
   useEffect(() => {
     getIsDark();
   }, [getIsDark]);
 
-  // change theme based on isDark updates
   useEffect(() => {
     setTheme(isDark ? dark : light);
   }, [isDark]);

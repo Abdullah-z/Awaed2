@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/core";
 import { useTheme } from "../hooks";
 import { Text } from "../components";
 
+let filterToken = "";
+
 export const Search = memo(() => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
@@ -13,9 +15,10 @@ export const Search = memo(() => {
   const dropdownController = useRef(null);
   const { sizes, colors, gradients, assets } = useTheme();
   const searchRef = useRef(null);
+  const [searchInputValue, setSearchInputValue] = useState("");
 
   const getSuggestions = useCallback(async (q) => {
-    const filterToken = q.toLowerCase();
+    filterToken = q.toLowerCase();
 
     if (typeof q !== "string" || q.length < 3) {
       setSuggestionsList(null);
@@ -40,12 +43,19 @@ export const Search = memo(() => {
     setSuggestionsList(suggestions);
     setLoading(false);
   }, []);
+
   const onClearPress = useCallback(() => {
+    filterToken = "";
     setSuggestionsList(null);
+    setSearchInputValue("");
   }, []);
 
-  const handleNavigtioan = (symb) => {
+  const handleNavigation = (symb) => {
+    filterToken = "";
+    setSearchInputValue("");
     setSuggestionsList(null);
+    setSelectedItem(null);
+
     navigation.navigate("DetailsPage", { symb: symb });
   };
 
@@ -65,20 +75,21 @@ export const Search = memo(() => {
           controller={(controller) => {
             dropdownController.current = controller;
           }}
-          // initialValue={'1'}
           direction={Platform.select({ ios: "down" })}
           dataSet={suggestionsList}
-          onChangeText={getSuggestions}
+          onChangeText={(text) => {
+            setSearchInputValue(text);
+            getSuggestions(text);
+          }}
           onSelectItem={(item) => {
-            item && handleNavigtioan(item.id);
+            item && handleNavigation(item.id);
           }}
           debounce={600}
           suggestionsListMaxHeight={Dimensions.get("window").height * 0.4}
           onClear={onClearPress}
-          //  onSubmit={(e) => onSubmitSearch(e.nativeEvent.text)}
           onOpenSuggestionsList={onOpenSuggestionsList}
           loading={loading}
-          useFilter={false} // set false to prevent rerender twice
+          useFilter={false}
           textInputProps={{
             placeholder: "Search Companies",
             autoCorrect: false,
@@ -93,7 +104,6 @@ export const Search = memo(() => {
           rightButtonsContainerStyle={{
             right: 8,
             height: 30,
-
             alignSelf: "center",
           }}
           inputContainerStyle={{
@@ -114,12 +124,9 @@ export const Search = memo(() => {
               </Text>
             </View>
           )}
-          //   ChevronIconComponent={<Feather name="chevron-down" size={20} color="#fff" />}
-          //   ClearIconComponent={<Feather name="x-circle" size={18} color="#fff" />}
           inputHeight={50}
           showChevron={false}
           closeOnBlur={false}
-          //  showClear={false}
         />
       </View>
     </>
