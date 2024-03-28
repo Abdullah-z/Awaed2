@@ -65,6 +65,7 @@ export default function BottomNav() {
         component={WatchList}
         options={{
           headerShown: false,
+          headerTitle: "Watchlist",
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "bookmark" : "bookmark-outline"}

@@ -224,6 +224,9 @@ export default () => {
   return (
     <Block gradient={gradients.light}>
       <Drawer.Navigator
+        screenOptions={{
+          swipeEnabled: false,
+        }}
         drawerType="slide"
         overlayColor="transparent"
         sceneContainerStyle={{ backgroundColor: "transparent" }}

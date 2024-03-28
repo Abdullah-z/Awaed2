@@ -2,12 +2,12 @@ import React, { memo, useCallback, useRef, useState } from "react";
 import { Button, Dimensions, View, Platform } from "react-native";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { useNavigation } from "@react-navigation/core";
-import { useTheme } from "../hooks";
+import { useData, useTheme } from "../hooks";
 import { Text } from "../components";
 
 let filterToken = "";
 
-export const Search = memo(() => {
+export const Search = memo((props) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState(null);
@@ -16,7 +16,8 @@ export const Search = memo(() => {
   const { sizes, colors, gradients, assets } = useTheme();
   const searchRef = useRef(null);
   const [searchInputValue, setSearchInputValue] = useState("");
-
+  const { portfolio, setPortfolio } = useData();
+  console.log("ppppp", props.focus);
   const getSuggestions = useCallback(async (q) => {
     filterToken = q.toLowerCase();
 
@@ -50,13 +51,19 @@ export const Search = memo(() => {
     setSearchInputValue("");
   }, []);
 
-  const handleNavigation = (symb) => {
-    filterToken = "";
-    setSearchInputValue("");
-    setSuggestionsList(null);
-    setSelectedItem(null);
+  const handleNavigation = (symb, nav) => {
+    if (props.nav === false) {
+      const existingIndex = portfolio?.findIndex((item) => item.symb === symb);
+      if (existingIndex !== -1) {
+        // Symbol exists, do nothing
+        return;
+      }
 
-    navigation.navigate("DetailsPage", { symb: symb });
+      // Symbol doesn't exist, add it
+      setPortfolio((oldData) => [...oldData, { symb: symb }]);
+    } else {
+      navigation.navigate("DetailsPage", { symb: symb });
+    }
   };
 
   const onOpenSuggestionsList = useCallback((isOpened) => {}, []);
@@ -71,6 +78,7 @@ export const Search = memo(() => {
         ]}
       >
         <AutocompleteDropdown
+          clearOnFocus
           ref={searchRef}
           controller={(controller) => {
             dropdownController.current = controller;
@@ -91,7 +99,8 @@ export const Search = memo(() => {
           loading={loading}
           useFilter={false}
           textInputProps={{
-            placeholder: "Search Companies",
+            autoFocus: props.focus,
+            placeholder: props.placeholder,
             autoCorrect: false,
             autoCapitalize: "none",
             style: {

@@ -27,7 +27,7 @@ export default function Dashboard() {
   return (
     <>
       <View style={{ marginHorizontal: sizes.sm }}>
-        <Search />
+        <Search nav={true} focus={false} placeholder={"Search Companies"} />
       </View>
       <TabView
         navigationState={{ index, routes }}

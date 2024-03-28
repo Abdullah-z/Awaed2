@@ -18,11 +18,7 @@ export default () => {
       screenOptions={screenOptions.stack}
       initialRouteName="Dashboard"
     >
-      <Stack.Screen
-        name="Home"
-        component={BottomNav}
-        options={{ title: "Dashboard" }}
-      />
+      <Stack.Screen name="Home" component={BottomNav} options={{ title: "" }} />
 
       <Stack.Screen
         name="Components"
