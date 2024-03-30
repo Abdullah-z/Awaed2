@@ -1,5 +1,5 @@
-import { View, ScrollView, Image } from "react-native";
-import React from "react";
+import { View, ScrollView, Image, Pressable } from "react-native";
+import React, { useState } from "react";
 import { Block, Text } from "../../components";
 import { useData, useTheme } from "../../hooks";
 import {
@@ -11,6 +11,10 @@ import {
   ButtonIcon,
   ButtonText,
   Divider,
+  Heading,
+  Modal,
+  ModalContent,
+  ModalHeader,
 } from "@gluestack-ui/themed";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -21,10 +25,29 @@ import PerformanceChart from "../../components/Charts/PerformanceChart";
 import HorizontalBarChart from "../../components/Charts/HorizontalBarChart";
 import PriceHistoryPerformance from "../../components/Charts/PriceHistoryPerformance";
 import PriceVolatility from "../../components/Charts/PriceVolatility";
+import { ModalBackdrop } from "@gluestack-ui/themed";
+import { ModalCloseButton } from "@gluestack-ui/themed";
+import { CloseIcon } from "@gluestack-ui/themed";
+import { ModalBody } from "@gluestack-ui/themed";
+import { ModalFooter } from "@gluestack-ui/themed";
+import { Icon } from "@gluestack-ui/themed";
+import * as Linking from "expo-linking";
 
 export default function Overview(props) {
   const { colors, sizes } = useTheme();
   const { portfolio, setPortfolio } = useData();
+
+  const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
+  const ref = React.useRef(null);
+  const [modalData, setModalData] = useState();
+
+  const ModalDate = new Date(modalData?.PublishedDate);
+  // Format the date as "Month Day" (e.g., "Oct 23")
+  const formattedModalDate = ModalDate?.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 
   // Preparing the chart data
   const chartData = [
@@ -113,7 +136,7 @@ export default function Overview(props) {
               <Text h4>{props.info[0]?.Name}</Text>
 
               <Block row>
-                <Text gray>NasdaqGS:</Text>
+                {/* <Text gray>NasdaqGS:</Text> */}
                 <Text gray>{props.info[0]?.Code}</Text>
               </Block>
             </Block>
@@ -121,6 +144,9 @@ export default function Overview(props) {
 
           <Block marginVertical={sizes.s}>
             <Button
+              variant="solid"
+              bg="#1D2A40"
+              action="primary"
               onPress={() => {
                 const existingIndex = portfolio.findIndex(
                   (item) => item.symb === props.info[0]?.Code
@@ -139,7 +165,7 @@ export default function Overview(props) {
                 }
               }}
             >
-              <ButtonText color={colors.black}>
+              <ButtonText color="#2394DF">
                 {portfolio.some((item) => item.symb === props.info[0]?.Code)
                   ? "Remove from Portfolio"
                   : "Add to Portfolio"}
@@ -282,12 +308,13 @@ export default function Overview(props) {
             <Button
               marginVertical={sizes.sm}
               width={"100%"}
-              variant="outline"
+              variant="solid"
+              bg="#1D2A40"
               action="primary"
               isDisabled={false}
               isFocusVisible={false}
             >
-              <ButtonText>See All Risks Checks</ButtonText>
+              <ButtonText color="#2394DF">See All Risks Checks</ButtonText>
             </Button>
           </Block>
         </Block>
@@ -308,13 +335,14 @@ export default function Overview(props) {
               <Button
                 marginBottom={sizes.s}
                 width={"100%"}
-                variant="outline"
+                variant="solid"
+                bg="#1D2A40"
                 action="primary"
                 isDisabled={false}
                 isFocusVisible={false}
               >
-                <ButtonText>Create narrative </ButtonText>
-                <ButtonIcon as={AddIcon} />
+                <ButtonText color="#2394DF">Create narrative </ButtonText>
+                <ButtonIcon color="#2394DF" as={AddIcon} />
               </Button>
             </Block>
           </Block>
@@ -353,12 +381,13 @@ export default function Overview(props) {
 
           <Button
             marginVertical={sizes.s}
-            variant="outline"
+            variant="solid"
+            bg="#1D2A40"
             action="primary"
             isDisabled={false}
             isFocusVisible={false}
           >
-            <ButtonText>View Narrative</ButtonText>
+            <ButtonText color="#2394DF">View Narrative</ButtonText>
           </Button>
         </Block>
         <Block
@@ -387,23 +416,18 @@ export default function Overview(props) {
             </ScrollView>
           </Block>
         </Block>
-        <Block
-          radius={sizes.sm}
-          padding={sizes.sm}
-          marginTop={sizes.sm}
-          tertiary
-        >
-          <Text gray h5>
+        <Block radius={sizes.sm} marginTop={sizes.sm} tertiary>
+          <Text padding={sizes.sm} gray h5>
             Price & History Performance
           </Text>
-          <Block marginTop={sizes.s}>
-            <PriceHistoryPerformance />
+          <Block>
+            <PriceHistoryPerformance symb={props.info[0]?.Code} />
           </Block>
           <Block marginVertical={sizes.s}>
             <Text p semibold>
               Recent News & Update
             </Text>
-            <Block marginTop={sizes.s}>
+            {/* <Block marginTop={sizes.s}>
               <Block row align="center">
                 <View
                   style={{
@@ -441,55 +465,261 @@ export default function Overview(props) {
                   <Text gray>25 Nov</Text>
                 </View>
               </Block>
-            </Block>
-            <Block marginTop={sizes.s}>
-              <Block row align="center">
-                <View
-                  style={{
-                    width: "10%",
-                    marginTop: sizes.s,
-                    alignItems: "center",
+            </Block> */}
+
+            {props.news?.slice(0, 5).map((item) => {
+              // Convert the string date to a Date object
+              const publishedDate = new Date(item.PublishedDate);
+              // Format the date as "Month Day" (e.g., "Oct 23")
+              const formattedDate = publishedDate.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              });
+
+              return (
+                <Pressable
+                  onPress={() => {
+                    setModalData(item);
+                    setShowModal2(true);
                   }}
                 >
-                  <Ionicons
-                    name="newspaper-outline"
-                    size={20}
-                    color={colors.icon}
-                    style={{
-                      backgroundColor: colors.card,
-                      padding: sizes.s,
-                      borderRadius: 100,
-                    }}
-                  />
-                </View>
-                <View
-                  style={{
-                    width: "90%",
-                    marginLeft: sizes.s,
-                  }}
-                >
-                  <Text>
-                    What is Microsoft Corporation's (NASDARQ:MSFT) Share Price
-                    Doing?
-                  </Text>
-                </View>
-              </Block>
-              <Block row>
-                <View style={{ width: "10%" }}></View>
-                <View style={{ width: "90%", marginLeft: sizes.s }}>
-                  <Text gray>22 Nov</Text>
-                </View>
-              </Block>
-            </Block>
+                  <Block marginTop={sizes.s} key={item.Id}>
+                    <Block row align="center">
+                      <View
+                        style={{
+                          width: "10%",
+                          marginTop: sizes.s,
+                          alignItems: "center",
+                        }}
+                      >
+                        {/* <Ionicons
+                        name="newspaper-outline"
+                        size={20}
+                        color={colors.icon}
+                        style={{
+                          backgroundColor: colors.card,
+                          padding: sizes.s,
+                          borderRadius: 100,
+                        }}
+                      /> */}
+                        <Image
+                          source={{ uri: item.Image }}
+                          style={{ width: 50, height: 50 }}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          width: "90%",
+                          marginLeft: sizes.sm,
+                        }}
+                      >
+                        <Text>{item.Title}</Text>
+                      </View>
+                    </Block>
+                    <Block row>
+                      <View style={{ width: "10%" }}></View>
+                      <View style={{ width: "90%", marginLeft: sizes.sm }}>
+                        {/* Render the formatted date */}
+                        <Text gray>{formattedDate}</Text>
+                      </View>
+                    </Block>
+                  </Block>
+                </Pressable>
+              );
+            })}
+
             <Button
               marginVertical={sizes.s}
-              variant="outline"
+              variant="solid"
+              bg="#1D2A40"
               action="primary"
               isDisabled={false}
               isFocusVisible={false}
+              onPress={() => setShowModal(true)}
+              ref={ref}
             >
-              <ButtonText>See more updates</ButtonText>
+              <ButtonText color="#2394DF">See more updates</ButtonText>
             </Button>
+            <Modal
+              size={"full"}
+              isOpen={showModal}
+              onClose={() => {
+                setShowModal(false);
+              }}
+              finalFocusRef={ref}
+            >
+              <ModalBackdrop />
+              <ModalContent>
+                <ModalHeader bgColor={colors.card}>
+                  <Heading size="lg" color={colors.text}>
+                    News & Updates
+                  </Heading>
+                  <ModalCloseButton>
+                    <Icon color={colors.text} as={CloseIcon} />
+                  </ModalCloseButton>
+                </ModalHeader>
+                <ModalBody
+                  bgColor={colors.card}
+                  height={"70%"}
+                  scrollEnabled={true}
+                >
+                  {props.news?.map((item) => {
+                    // Convert the string date to a Date object
+                    const publishedDate = new Date(item.PublishedDate);
+                    // Format the date as "Month Day" (e.g., "Oct 23")
+                    const formattedDate = publishedDate.toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                      }
+                    );
+
+                    return (
+                      <Pressable
+                        onPress={() => {
+                          setModalData(item);
+                          setShowModal2(true);
+                        }}
+                      >
+                        <Block marginTop={sizes.s} key={item.Id}>
+                          <Block row align="center">
+                            <View
+                              style={{
+                                width: "10%",
+                                marginTop: sizes.s,
+                                alignItems: "center",
+                              }}
+                            >
+                              {/* <Ionicons
+                        name="newspaper-outline"
+                        size={20}
+                        color={colors.icon}
+                        style={{
+                          backgroundColor: colors.card,
+                          padding: sizes.s,
+                          borderRadius: 100,
+                        }}
+                      /> */}
+                              <Image
+                                source={{ uri: item.Image }}
+                                style={{ width: 50, height: 50 }}
+                              />
+                            </View>
+                            <View
+                              style={{
+                                width: "90%",
+                                marginLeft: sizes.sm,
+                              }}
+                            >
+                              <Text color={colors.text}>{item.Title}</Text>
+                            </View>
+                          </Block>
+                          <Block row>
+                            <View style={{ width: "10%" }}></View>
+                            <View
+                              style={{ width: "90%", marginLeft: sizes.sm }}
+                            >
+                              <Text gray>{formattedDate}</Text>
+                            </View>
+                          </Block>
+                        </Block>
+                      </Pressable>
+                    );
+                  })}
+                </ModalBody>
+                <ModalFooter bgColor={colors.card}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    action="secondary"
+                    mr="$3"
+                    onPress={() => {
+                      setShowModal(false);
+                    }}
+                  >
+                    <ButtonText color={colors.text}>Close</ButtonText>
+                  </Button>
+                  {/* <Button
+                      size="sm"
+                      action="positive"
+                      borderWidth="$0"
+                      onPress={() => {
+                        setShowModal(false);
+                      }}
+                    >
+                      <ButtonText>Explore</ButtonText>
+                    </Button> */}
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            <Modal
+              size={"full"}
+              isOpen={showModal2}
+              onClose={() => {
+                setShowModal2(false);
+              }}
+              finalFocusRef={ref}
+            >
+              <ModalBackdrop />
+              <ModalContent>
+                <ModalHeader bgColor={colors.card}>
+                  <Heading size="lg" color={colors.text}>
+                    {props.info[0]?.Name}
+                  </Heading>
+                  <ModalCloseButton>
+                    <Icon color={colors.text} as={CloseIcon} />
+                  </ModalCloseButton>
+                </ModalHeader>
+                <ModalBody
+                  bgColor={colors.card}
+                  height={"70%"}
+                  scrollEnabled={true}
+                >
+                  <Text gray>
+                    {formattedModalDate} | {modalData?.Site}
+                  </Text>
+                  <Text marginTop={sizes.s} h5 bold color={colors.text}>
+                    {modalData?.Title}
+                  </Text>
+                  <Image
+                    style={{ marginVertical: sizes.sm }}
+                    source={{ uri: modalData?.Image }}
+                    width={"100%"}
+                    height={300}
+                  ></Image>
+                  <Text color={colors.text}>{modalData?.Text}</Text>
+                  <Pressable onPress={() => Linking.openURL(modalData?.Url)}>
+                    <Text marginTop={sizes.sm} color={colors.info}>
+                      Read Full Article
+                    </Text>
+                  </Pressable>
+                </ModalBody>
+                <ModalFooter bgColor={colors.card}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    action="primary"
+                    mr="$3"
+                    onPress={() => {
+                      setShowModal2(false);
+                    }}
+                  >
+                    <ButtonText color={colors.text}>Close</ButtonText>
+                  </Button>
+                  {/* <Button
+                      size="sm"
+                      action="positive"
+                      borderWidth="$0"
+                      onPress={() => {
+                        setShowModal(false);
+                      }}
+                    >
+                      <ButtonText>Explore</ButtonText>
+                    </Button> */}
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </Block>
 
           <Block>
@@ -567,12 +797,15 @@ export default function Overview(props) {
 
             <Button
               marginVertical={sizes.sm}
-              variant="outline"
+              variant="solid"
+              bg="#1D2A40"
               action="primary"
               isDisabled={false}
               isFocusVisible={false}
             >
-              <ButtonText>See full shareholder returns</ButtonText>
+              <ButtonText color="#2394DF">
+                See full shareholder returns
+              </ButtonText>
             </Button>
 
             <Block>

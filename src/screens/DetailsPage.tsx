@@ -22,13 +22,16 @@ export default function DetailsPage({ route }) {
   const [keyHealthInfo, setKeyHealthInfo] = useState();
   const [finPositionAnalysis, setFinPositionAnalysis] = useState();
   const [debtEquityHistory, setDebtEquityHistory] = useState();
+  const [news, setNews] = useState();
   const [loading, setLoading] = useState(0);
+
+  console.log("NEWS:", news);
 
   const { colors } = useTheme();
   const [routes] = React.useState([
     { key: "a", title: "Overview" },
     { key: "b", title: "Valuation" },
-    { key: "c", title: "Future" },
+    // { key: "c", title: "Future" },
     { key: "d", title: "Past" },
     { key: "e", title: "Financial Health" },
     { key: "f", title: "Dividend" },
@@ -42,9 +45,9 @@ export default function DetailsPage({ route }) {
   const { symb } = route.params;
 
   const renderScene = SceneMap({
-    a: (props) => <Overview {...props} info={information} />,
+    a: (props) => <Overview {...props} info={information} news={news} />,
     b: (props) => <Valuation {...props} info={information} />,
-    c: Future,
+    // c: Future,
     d: Past,
     e: (props) => (
       <Health
@@ -195,12 +198,35 @@ export default function DetailsPage({ route }) {
       });
   };
 
+  const GetNews = async () => {
+    setLoading(loading + 1);
+    await commonDataService
+      .executeApiCall(
+        "api/symbol/$query",
+        `$filter=Code eq '${symb}'&$expand=News($top=10)`,
+        "plain/text"
+      )
+      .then(async (res) => {
+        setLoading(loading - 1);
+
+        setNews(res?.data?.value[0].News);
+      })
+      .catch((error) => {
+        setLoading(loading - 1);
+        console.log(
+          "key info error:",
+          error.response ? error.response.data : error
+        );
+      });
+  };
+
   useEffect(() => {
     GetInformation();
     GetManagementInfo();
     GetKeyInfo();
     GetFinPositionAnalysis();
     GetDebtEquityHistory();
+    GetNews();
   }, []);
 
   return (

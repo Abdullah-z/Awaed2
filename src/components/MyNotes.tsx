@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import Block from './Block';
-import Text from './Text';
+import React, { useState } from "react";
+import Block from "./Block";
+import Text from "./Text";
 import {
   Button,
   Center,
@@ -9,37 +9,37 @@ import {
   ModalFooter,
   ModalHeader,
   TextareaInput,
-} from '@gluestack-ui/themed';
-import {ButtonText} from '@gluestack-ui/themed';
-import {ButtonIcon} from '@gluestack-ui/themed';
-import {AddIcon} from '@gluestack-ui/themed';
-import {useTheme} from '../hooks';
-import {ScrollView} from 'react-native-gesture-handler';
-import {Modal} from '@gluestack-ui/themed';
-import {ModalContent} from '@gluestack-ui/themed';
-import {Heading} from '@gluestack-ui/themed';
-import {ModalCloseButton} from '@gluestack-ui/themed';
-import {CloseIcon} from '@gluestack-ui/themed';
-import {ModalBody} from '@gluestack-ui/themed';
-import {Textarea} from '@gluestack-ui/themed';
-import {Menu} from '@gluestack-ui/themed';
-import {MenuItem} from '@gluestack-ui/themed';
-import {MenuItemLabel} from '@gluestack-ui/themed';
-import {ThreeDotsIcon} from '@gluestack-ui/themed';
-import {EditIcon} from '@gluestack-ui/themed';
-import {TrashIcon} from '@gluestack-ui/themed';
-import {Alert} from 'react-native';
+} from "@gluestack-ui/themed";
+import { ButtonText } from "@gluestack-ui/themed";
+import { ButtonIcon } from "@gluestack-ui/themed";
+import { AddIcon } from "@gluestack-ui/themed";
+import { useTheme } from "../hooks";
+import { ScrollView } from "react-native-gesture-handler";
+import { Modal } from "@gluestack-ui/themed";
+import { ModalContent } from "@gluestack-ui/themed";
+import { Heading } from "@gluestack-ui/themed";
+import { ModalCloseButton } from "@gluestack-ui/themed";
+import { CloseIcon } from "@gluestack-ui/themed";
+import { ModalBody } from "@gluestack-ui/themed";
+import { Textarea } from "@gluestack-ui/themed";
+import { Menu } from "@gluestack-ui/themed";
+import { MenuItem } from "@gluestack-ui/themed";
+import { MenuItemLabel } from "@gluestack-ui/themed";
+import { ThreeDotsIcon } from "@gluestack-ui/themed";
+import { EditIcon } from "@gluestack-ui/themed";
+import { TrashIcon } from "@gluestack-ui/themed";
+import { Alert } from "react-native";
 
-let noteInput = '';
+let noteInput = "";
 
 export default function MyNotes() {
   const [selectedNoteIndex, setSelectedNoteIndex] = useState(null);
-  const {colors, sizes} = useTheme();
+  const { colors, sizes } = useTheme();
   const [showModal, setShowModal] = useState(false);
   const ref = React.useRef(null);
 
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editedNoteContent, setEditedNoteContent] = useState('');
+  const [editedNoteContent, setEditedNoteContent] = useState("");
 
   const [notes, setNotes] = useState([]);
 
@@ -47,8 +47,8 @@ export default function MyNotes() {
     const updatedNotes = [...notes];
     updatedNotes[selectedNoteIndex].content = editedNoteContent;
     const currentDate = new Date();
-    const options = {day: 'numeric', month: 'short', year: 'numeric'};
-    const formattedDate = currentDate.toLocaleDateString('en-US', options);
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    const formattedDate = currentDate.toLocaleDateString("en-US", options);
     updatedNotes[selectedNoteIndex].updatedAt = formattedDate;
     setNotes(updatedNotes);
     setEditModalVisible(false);
@@ -58,8 +58,8 @@ export default function MyNotes() {
 
   const handleAddNote = (noteText) => {
     const currentDate = new Date();
-    const options = {day: 'numeric', month: 'short', year: 'numeric'};
-    const formattedDate = currentDate.toLocaleDateString('en-US', options);
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    const formattedDate = currentDate.toLocaleDateString("en-US", options);
     const newNote = {
       content: noteText,
       createdAt: formattedDate,
@@ -71,24 +71,24 @@ export default function MyNotes() {
 
   const handleDeleteNote = (index) => {
     Alert.alert(
-      'Delete Note',
-      'Are you sure you want to delete this note?',
+      "Delete Note",
+      "Are you sure you want to delete this note?",
       [
         {
-          text: 'Cancel',
-          style: 'cancel',
+          text: "Cancel",
+          style: "cancel",
         },
         {
-          text: 'Delete',
+          text: "Delete",
           onPress: () => {
             const updatedNotes = [...notes];
             updatedNotes.splice(index, 1);
             setNotes(updatedNotes);
           },
-          style: 'destructive',
+          style: "destructive",
         },
       ],
-      {cancelable: false},
+      { cancelable: false }
     );
   };
 
@@ -100,7 +100,8 @@ export default function MyNotes() {
         onClose={() => {
           setShowModal(false);
         }}
-        finalFocusRef={ref}>
+        finalFocusRef={ref}
+      >
         <ModalBackdrop />
         <ModalContent>
           <ModalHeader>
@@ -114,7 +115,8 @@ export default function MyNotes() {
               size="md"
               isReadOnly={false}
               isInvalid={false}
-              isDisabled={false}>
+              isDisabled={false}
+            >
               <TextareaInput
                 onChangeText={(text) => (noteInput = text)}
                 placeholder="Your text goes here..."
@@ -129,7 +131,8 @@ export default function MyNotes() {
               mr="$3"
               onPress={() => {
                 setShowModal(false);
-              }}>
+              }}
+            >
               <ButtonText>Cancel</ButtonText>
             </Button>
             <Button
@@ -138,9 +141,10 @@ export default function MyNotes() {
               borderWidth="$0"
               onPress={() => {
                 handleAddNote(noteInput);
-                noteInput = '';
+                noteInput = "";
                 setShowModal(false);
-              }}>
+              }}
+            >
               <ButtonText>Add</ButtonText>
             </Button>
           </ModalFooter>
@@ -152,7 +156,8 @@ export default function MyNotes() {
         isOpen={editModalVisible}
         onClose={() => {
           setEditModalVisible(false);
-        }}>
+        }}
+      >
         <ModalBackdrop />
         <ModalContent>
           <ModalHeader>
@@ -166,7 +171,8 @@ export default function MyNotes() {
               size="md"
               isReadOnly={false}
               isInvalid={false}
-              isDisabled={false}>
+              isDisabled={false}
+            >
               <TextareaInput
                 onChangeText={(text) => setEditedNoteContent(text)}
                 value={editedNoteContent}
@@ -181,7 +187,8 @@ export default function MyNotes() {
               mr="$3"
               onPress={() => {
                 setEditModalVisible(false);
-              }}>
+              }}
+            >
               <ButtonText>Cancel</ButtonText>
             </Button>
             <Button
@@ -190,8 +197,9 @@ export default function MyNotes() {
               borderWidth="$0"
               onPress={() => {
                 handleEditNote();
-                setEditedNoteContent('');
-              }}>
+                setEditedNoteContent("");
+              }}
+            >
               <ButtonText>Save</ButtonText>
             </Button>
           </ModalFooter>
@@ -212,17 +220,19 @@ export default function MyNotes() {
               <Block align="flex-end">
                 <Menu
                   placement="bottom right"
-                  trigger={({...triggerProps}) => (
+                  trigger={({ ...triggerProps }) => (
                     <Button variant="link" {...triggerProps}>
                       <ButtonIcon as={ThreeDotsIcon} />
                     </Button>
-                  )}>
+                  )}
+                >
                   <MenuItem
                     onPress={() => {
                       setEditedNoteContent(item.content);
                       setSelectedNoteIndex(index);
                       setEditModalVisible(true);
-                    }}>
+                    }}
+                  >
                     <Icon as={EditIcon} size="sm" mr="$2" />
                     <MenuItemLabel size="sm">Edit</MenuItemLabel>
                   </MenuItem>
@@ -239,13 +249,15 @@ export default function MyNotes() {
         <Button
           onPress={() => setShowModal(true)}
           marginVertical={sizes.s}
-          width={'30%'}
-          variant="outline"
+          width={"30%"}
+          variant="solid"
+          bg="#1D2A40"
           action="primary"
           isDisabled={false}
-          isFocusVisible={false}>
-          <ButtonText>Add note </ButtonText>
-          <ButtonIcon as={AddIcon} />
+          isFocusVisible={false}
+        >
+          <ButtonText color="#2394DF">Add note </ButtonText>
+          <ButtonIcon color="#2394DF" as={AddIcon} />
         </Button>
       </Block>
     </ScrollView>

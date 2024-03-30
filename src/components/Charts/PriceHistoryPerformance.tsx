@@ -1,98 +1,223 @@
-// In App.js
-import React, { Component } from "react";
-import { AppRegistry, StyleSheet, Text, View, Platform } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
+import CommonDataService from "../../services/common-data-service";
+import { SERVICE_ROUTE } from "../../services/endpoints";
+import Text from "../Text";
+import { useTheme } from "../../hooks";
+import Block from "../Block";
+import { Pressable } from "react-native";
 
-export default class PriceHistoryPerformance extends Component {
-  constructor(props) {
-    super(props);
+const PriceHistoryPerformance = (props) => {
+  const commonDataService = new CommonDataService();
+  const [loading, setLoading] = useState(false);
+  const [chartData, setChartData] = useState();
+  const [time, setTime] = useState("3M");
+  const { sizes, colors, gradients, assets } = useTheme();
+  console.log("cdata:", chartData);
 
-    const chartConfig = {
-      type: "timeseries",
-      theme: "fusion",
-      width: "100%",
-      height: "600",
-      dataFormat: "json",
+  const url = `${SERVICE_ROUTE.GET_PRICE_HISTORY}/${props.symb}/${time}`;
 
-      dataSource: {
-        data: null,
-        // caption: {
-        //   text: "Sales Analysis",
-        // },
-        // subcaption: {
-        //   text: "Grocery",
-        // },
-        yAxis: [
-          {
-            plot: {
-              value: "Grocery Sales Value",
-              type: "line",
-            },
-            format: {
-              prefix: "$",
-            },
-            title: "Sale Value",
-          },
-        ],
-      },
-      schemaJson: null,
-      dataJson: null,
-    };
+  const GetGainers = async () => {
+    setLoading(true);
+    try {
+      const res = await commonDataService.fetchData(url);
+      setChartData(res.data);
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
+    }
+  };
 
-    this.state = {
-      chartConfig,
-    };
-  }
-
-  componentDidMount() {
-    this.fetchDataAndSchema();
-  }
-
-  fetchDataAndSchema() {
-    const jsonify = (res) => res.json();
-    const dFetch = fetch(
-      "https://s3.eu-central-1.amazonaws.com/fusion.store/ft/data/line-chart-with-time-axis-data.json"
-    ).then(jsonify);
-    // This is the remote url to fetch the schema.
-    const sFetch = fetch(
-      "https://s3.eu-central-1.amazonaws.com/fusion.store/ft/schema/line-chart-with-time-axis-schema.json"
-    ).then(jsonify);
-    Promise.all([dFetch, sFetch]).then((res) => {
-      const data = res[0];
-      const schema = res[1];
-      const updatedChartConfig = {
-        ...this.state.chartConfig,
-        dataJson: data,
-        schemaJson: schema,
-      };
-      this.setState({ chartConfig: updatedChartConfig });
+  function transformData(data) {
+    return data?.map((item) => {
+      // Convert the date to the desired format
+      const date = new Date(item.date);
+      const formattedDate = `${date.getDate()}-${getMonthAbbreviation(
+        date
+      )}-${String(date.getFullYear()).slice(2)}`;
+      return [formattedDate, item.price];
     });
   }
 
-  render() {
-    const modules = ["timeseries"];
-
-    return (
-      <ReactNativeFusionCharts
-        chartConfig={this.state.chartConfig}
-        modules={modules}
-      />
-    );
+  // Helper function to get the abbreviation of the month
+  function getMonthAbbreviation(date) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    return months[date.getMonth()];
   }
-}
+
+  useEffect(() => {
+    GetGainers();
+  }, [time]);
+
+  const chartConfig = {
+    dataFormat: "json",
+    dataJson: transformData(chartData),
+    dataSource: {
+      legend: {
+        enabled: 0,
+      },
+      navigator: {
+        enabled: false,
+      },
+      styleDefinition: {
+        bg: {
+          fill: colors.tertiary,
+        },
+      },
+      chart: {
+        theme: "candy",
+        style: {
+          background: "bg",
+          canvas: "bg",
+          showYAxisValues: "0",
+          divlinealpha: "0",
+        },
+      },
+
+      data: null,
+      yAxis: {
+        style: {
+          title: {
+            opacity: 0,
+          },
+          "grid-line": { opacity: 0 },
+          label: { opacity: 0 },
+        },
+        plot: {
+          connectnulldata: true,
+        },
+      },
+    },
+    height: "400",
+    schemaJson: [
+      { format: "%d-%b-%y", name: "Time", type: "date" },
+      { name: "Price", type: "number" },
+    ],
+
+    type: "timeseries",
+    width: "100%",
+  };
+
+  console.log("CFG", JSON.stringify(chartConfig));
+
+  return (
+    <View style={styles.container}>
+      {chartData ? (
+        <>
+          <Block row radius={10} marginTop={sizes.s} overflow="hidden">
+            <Block
+              padding={8}
+              color={time === "1M" ? "#1D2A40" : colors.tertiary}
+              justify="center"
+              radius={time === "1M" ? 10 : 0}
+            >
+              <Pressable
+                onPress={() => {
+                  setTime("1M");
+                }}
+              >
+                <Text center color={colors.white} semibold>
+                  1M
+                </Text>
+              </Pressable>
+            </Block>
+
+            <Block
+              padding={8}
+              color={time === "3M" ? "#1D2A40" : colors.tertiary}
+              justify="center"
+              radius={time === "3M" ? 10 : 0}
+            >
+              <Pressable
+                onPress={() => {
+                  setTime("3M");
+                }}
+              >
+                <Text center color={colors.white} semibold>
+                  3M
+                </Text>
+              </Pressable>
+            </Block>
+            <Block
+              padding={8}
+              color={time === "6M" ? "#1D2A40" : colors.tertiary}
+              justify="center"
+              radius={time === "6M" ? 10 : 0}
+            >
+              <Pressable
+                onPress={() => {
+                  setTime("6M");
+                }}
+              >
+                <Text center color={colors.white} semibold>
+                  6M
+                </Text>
+              </Pressable>
+            </Block>
+            <Block
+              padding={8}
+              color={time === "1Y" ? "#1D2A40" : colors.tertiary}
+              justify="center"
+              radius={time === "1Y" ? 10 : 0}
+            >
+              <Pressable
+                onPress={() => {
+                  setTime("1Y");
+                }}
+              >
+                <Text center color={colors.white} semibold>
+                  1Y
+                </Text>
+              </Pressable>
+            </Block>
+            <Block
+              padding={8}
+              color={time === "5Y" ? "#1D2A40" : colors.tertiary}
+              justify="center"
+              radius={time === "5Y" ? 10 : 0}
+            >
+              <Pressable
+                onPress={() => {
+                  setTime("5Y");
+                }}
+              >
+                <Text center color={colors.white} semibold>
+                  5Y
+                </Text>
+              </Pressable>
+            </Block>
+          </Block>
+          <ReactNativeFusionCharts
+            chartConfig={chartConfig}
+            modules={["timeseries"]}
+          />
+        </>
+      ) : (
+        <Text>Loading chart data...</Text>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
   },
-  heading: {
-    fontSize: 20,
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  chartContainer: {
-    height: 500,
-    backgroundColor: "#000000",
-  },
 });
+
+export default PriceHistoryPerformance;
