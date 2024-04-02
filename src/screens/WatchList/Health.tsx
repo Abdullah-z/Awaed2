@@ -7,17 +7,17 @@ import VerticalBarChart from "../../components/Charts/VerticalBarChart";
 import MultiAreaChart from "../../components/Charts/MultiAreaChart";
 import TreeMap from "../../components/Charts/TreeMap";
 
+export function formatNumberWithSuffix(number) {
+  const suffixes = ["", "k", "m", "b"]; // Suffixes for thousand, million, and billion
+  const suffixIndex = Math.floor(Math.log10(Math.abs(number)) / 3); // Determine suffix index
+  const adjustedNumber = number / Math.pow(1000, suffixIndex); // Adjust the number
+  const suffix = suffixes[suffixIndex]; // Get the appropriate suffix
+  return adjustedNumber.toFixed(1) + suffix; // Return the formatted number with suffix
+}
+
 export default function Health(props) {
   console.log("===>data:", JSON.stringify(props.keyHealthInfo));
   const { colors, sizes } = useTheme();
-
-  function formatNumberWithSuffix(number) {
-    const suffixes = ["", "k", "m", "b"]; // Suffixes for thousand, million, and billion
-    const suffixIndex = Math.floor(Math.log10(Math.abs(number)) / 3); // Determine suffix index
-    const adjustedNumber = number / Math.pow(1000, suffixIndex); // Adjust the number
-    const suffix = suffixes[suffixIndex]; // Get the appropriate suffix
-    return adjustedNumber.toFixed(1) + suffix; // Return the formatted number with suffix
-  }
 
   return (
     <ScrollView style={{ margin: sizes.s }}>

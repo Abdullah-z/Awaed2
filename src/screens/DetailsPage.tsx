@@ -24,6 +24,7 @@ export default function DetailsPage({ route }) {
   const [debtEquityHistory, setDebtEquityHistory] = useState();
   const [news, setNews] = useState();
   const [loading, setLoading] = useState(0);
+  const [pastPerformance, setPastPerformance] = useState();
 
   console.log("NEWS:", news);
 
@@ -48,7 +49,7 @@ export default function DetailsPage({ route }) {
     a: (props) => <Overview {...props} info={information} news={news} />,
     b: (props) => <Valuation {...props} info={information} />,
     // c: Future,
-    d: Past,
+    d: (props) => <Past {...props} data={pastPerformance} />,
     e: (props) => (
       <Health
         {...props}
@@ -220,6 +221,19 @@ export default function DetailsPage({ route }) {
       });
   };
 
+  const GetPastPerformance = async () => {
+    setLoading(loading + 1);
+    try {
+      const res = await commonDataService.fetchData(
+        `${SERVICE_ROUTE.GET_PAST_PERFORMANCE}/${symb}`
+      );
+      setPastPerformance(res.data);
+    } catch (error) {
+      setLoading(loading - 1);
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     GetInformation();
     GetManagementInfo();
@@ -227,6 +241,7 @@ export default function DetailsPage({ route }) {
     GetFinPositionAnalysis();
     GetDebtEquityHistory();
     GetNews();
+    GetPastPerformance();
   }, []);
 
   return (

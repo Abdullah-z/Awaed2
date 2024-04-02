@@ -14,11 +14,10 @@ const PriceHistoryPerformance = (props) => {
   const [chartData, setChartData] = useState();
   const [time, setTime] = useState("3M");
   const { sizes, colors, gradients, assets } = useTheme();
-  console.log("cdata:", chartData);
 
   const url = `${SERVICE_ROUTE.GET_PRICE_HISTORY}/${props.symb}/${time}`;
 
-  const GetGainers = async () => {
+  const GetPerformanceHistory = async () => {
     setLoading(true);
     try {
       const res = await commonDataService.fetchData(url);
@@ -60,7 +59,7 @@ const PriceHistoryPerformance = (props) => {
   }
 
   useEffect(() => {
-    GetGainers();
+    GetPerformanceHistory();
   }, [time]);
 
   const chartConfig = {
@@ -111,8 +110,6 @@ const PriceHistoryPerformance = (props) => {
     type: "timeseries",
     width: "100%",
   };
-
-  console.log("CFG", JSON.stringify(chartConfig));
 
   return (
     <View style={styles.container}>
