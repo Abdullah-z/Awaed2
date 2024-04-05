@@ -140,7 +140,7 @@ const Sankey = (props) => {
         <View style={{ margin: sizes.s, alignItems: "flex-end" }}>
           <Button
             width={"25%"}
-            size="md"
+            size="sm"
             variant="solid"
             action="secondary"
             isDisabled={false}

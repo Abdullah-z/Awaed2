@@ -2,8 +2,9 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
 import { useTheme } from "../../hooks";
+import NumberWithCommas from "../NumberWithCommas";
 
-export default function GuageChart() {
+export default function GuageChart(props) {
   const { colors, sizes } = useTheme();
 
   const dataSource = {
@@ -12,78 +13,91 @@ export default function GuageChart() {
     height: 300,
     dataSource: {
       chart: {
-        caption: "Walmart's Customer Satisfaction Score",
-        subcaption: "2017",
         lowerlimit: "0",
         upperlimit: "100",
-        showvalue: "1",
         numbersuffix: "%",
         theme: "fusion",
+        labelFontColor: "#ffffff",
         bgColor: colors.background,
       },
       colorrange: {
         color: [
-          {
-            minvalue: "0",
-            maxvalue: "50",
-            code: "#F2726F",
-          },
-          {
-            minvalue: "50",
-            maxvalue: "75",
-            code: "#FFC533",
-          },
-          {
-            minvalue: "75",
-            maxvalue: "100",
-            code: "#62B58F",
-          },
+          { minvalue: "0", maxvalue: "50", code: "#F2726F" },
+          { minvalue: "50", maxvalue: "75", code: "#FFC533" },
+          { minvalue: "75", maxvalue: "100", code: "#62B58F" },
         ],
       },
       dials: {
         dial: [
           {
-            value: "71",
-            tooltext: "<b>9%</b> lesser that target",
-          },
-        ],
-      },
-      trendpoints: {
-        point: [
-          {
-            startvalue: "80",
-            displayvalue: "Target",
-            thickness: "2",
-            color: "#E15A26",
-            usemarker: "1",
-            markerbordercolor: "#E15A26",
-            markertooltext: "80%",
+            bgcolor: "#2394DF",
+            bordercolor: "#FFFFFF",
+            value: props.data,
           },
         ],
       },
     },
   };
 
+  if (props.data2) {
+    dataSource.dataSource.dials.dial.push({
+      bgcolor: "#71E7D6",
+      bordercolor: "#FFFFFF",
+      value: props.data2,
+    });
+  }
+
   const modules = ["widgets"];
+
   return (
     <View>
-      <Text>guage</Text>
       <ReactNativeFusionCharts chartConfig={dataSource} modules={modules} />
+      {props.data2 && (
+        <View style={styles.legendContainer}>
+          {props.data && (
+            <View style={styles.legendItem}>
+              <View
+                style={[styles.legendColor, { backgroundColor: "#2394DF" }]}
+              />
+              <Text style={styles.legendText}>
+                {props?.legendA}: {NumberWithCommas(props.data)}%
+              </Text>
+            </View>
+          )}
+          {props.data2 && (
+            <View style={styles.legendItem}>
+              <View
+                style={[styles.legendColor, { backgroundColor: "#71E7D6" }]}
+              />
+              <Text style={styles.legendText}>
+                {props?.legendB}: {NumberWithCommas(props.data2)}%
+              </Text>
+            </View>
+          )}
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
+  legendContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
   },
-  heading: {
-    fontSize: 20,
-    textAlign: "center",
-    marginBottom: 10,
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
   },
-  chartContainer: {
-    height: 300,
+  legendColor: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  legendText: {
+    color: "white",
   },
 });

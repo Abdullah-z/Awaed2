@@ -8,6 +8,9 @@ import { Divider } from "@gluestack-ui/themed";
 import { Ionicons } from "@expo/vector-icons";
 import MultiAreaChart from "../../components/Charts/MultiAreaChart";
 import ERHLine from "../../components/Charts/ERHLine";
+import WaterfallChart from "../../components/Charts/WaterfallChart";
+import NumberWithCommas from "../../components/NumberWithCommas";
+import News from "../../components/News";
 
 export default function Past(props) {
   console.log("working on this:", props.data);
@@ -41,7 +44,10 @@ export default function Past(props) {
               </View>
               <View style={{ width: "90%", marginLeft: sizes.s }}>
                 <Text h4 semibold>
-                  ---DATA---
+                  {NumberWithCommas(
+                    props?.data?.keyInformation?.earningsGrowthRate
+                  )}
+                  %
                 </Text>
                 <Text gray>Earnings growth rate</Text>
               </View>
@@ -52,7 +58,8 @@ export default function Past(props) {
               </View>
               <View style={{ width: "90%", marginLeft: sizes.s }}>
                 <Text h4 semibold>
-                  ---DATA---
+                  {NumberWithCommas(props?.data?.keyInformation?.epsGrowthRate)}
+                  %
                 </Text>
                 <Text gray>EPS growth rate</Text>
               </View>
@@ -66,7 +73,10 @@ export default function Past(props) {
               </Block>
               <Block>
                 <Text white align="right">
-                  ---DATA---
+                  {NumberWithCommas(
+                    props?.data?.keyInformation?.techIndustryGrowthRate
+                  )}
+                  %
                 </Text>
               </Block>
             </Block>
@@ -77,7 +87,10 @@ export default function Past(props) {
               </Block>
               <Block>
                 <Text white align="right">
-                  ---DATA---
+                  {NumberWithCommas(
+                    props?.data?.keyInformation?.revenueGrowthRate
+                  )}
+                  %
                 </Text>
               </Block>
             </Block>
@@ -87,7 +100,12 @@ export default function Past(props) {
                 <Text gray>Return on equity</Text>
               </Block>
               <Block>
-                <Text white align="right"></Text>
+                <Text white align="right">
+                  {NumberWithCommas(
+                    props?.data?.keyInformation?.returnOnEquity
+                  )}
+                  %
+                </Text>
               </Block>
             </Block>
             <Divider bgColor="$blueGray800" marginVertical={sizes.s} />
@@ -96,7 +114,9 @@ export default function Past(props) {
                 <Text gray>Net margin </Text>
               </Block>
               <Block>
-                <Text white align="right"></Text>
+                <Text white align="right">
+                  {NumberWithCommas(props?.data?.keyInformation?.netMargin)}%
+                </Text>
               </Block>
             </Block>
             <Divider bgColor="$blueGray800" marginVertical={sizes.s} />
@@ -105,7 +125,9 @@ export default function Past(props) {
                 <Text gray>Last Earnings Update </Text>
               </Block>
               <Block>
-                <Text white align="right"></Text>
+                <Text white align="right">
+                  {props?.data?.keyInformation?.lastEarningsUpdate}
+                </Text>
               </Block>
             </Block>
           </Block>
@@ -116,7 +138,9 @@ export default function Past(props) {
             Recent past performance updates
           </Text>
 
-          <Block row align="center" marginVertical={sizes.xs}>
+          <News news={props?.data?.recentPastPerformanceUpdates} />
+
+          {/* <Block row align="center" marginVertical={sizes.xs}>
             <View
               style={{
                 width: "10%",
@@ -145,15 +169,15 @@ export default function Past(props) {
                 expectations
               </Text>
             </View>
-          </Block>
-          <Block row>
+          </Block> */}
+          {/* <Block row>
             <View style={{ width: "10%" }}></View>
             <View style={{ width: "90%", marginLeft: sizes.sm }}>
               <Text gray>Feb 6</Text>
             </View>
-          </Block>
+          </Block> */}
 
-          <Block row align="center" marginVertical={sizes.xs}>
+          {/* <Block row align="center" marginVertical={sizes.xs}>
             <View
               style={{
                 width: "10%",
@@ -187,7 +211,7 @@ export default function Past(props) {
             <View style={{ width: "90%", marginLeft: sizes.sm }}>
               <Text gray>Feb 6</Text>
             </View>
-          </Block>
+          </Block> */}
         </Block>
 
         <Block marginVertical={sizes.s}>
@@ -198,7 +222,7 @@ export default function Past(props) {
           </Text>
         </Block>
         <Sankey data={props?.data?.revenueAndExpenseBreakdown} />
-
+        <Divider marginVertical={sizes.s} bg="$blueGray800" />
         <Block>
           <Text h5>Earnings and Revenue History</Text>
           {/* <MultiAreaChart data={props?.data?.earningAndRevenueHistory} /> */}
@@ -238,6 +262,49 @@ export default function Past(props) {
               AAPL's debt is well covered by operating cash flow (107.8%).
             </Text>
           </Text>
+        </Block>
+        <Divider marginTop={sizes.s} bgColor="$blueGray800" />
+        <Block marginVertical={sizes.sm}>
+          <Text h5 white>
+            Free Cash Flow vs Earnings Analysis
+          </Text>
+          <WaterfallChart data={props?.data?.cashFlowVsEarningAnalysis} />
+        </Block>
+        <Divider marginVertical={sizes.s} bg="$blueGray800" />
+        <Block>
+          <Text white h5>
+            Return on Equity
+          </Text>
+          <GuageChart
+            data={props?.data?.returnOnEquityAnalysis?.returnOnEquity}
+          />
+        </Block>
+        <Divider marginVertical={sizes.s} bg="$blueGray800" />
+        <Block>
+          <Text white h5>
+            Return on Assets
+          </Text>
+          <GuageChart
+            data={props?.data?.returnOnAssetsAnalysis?.returnOnAssets}
+          />
+        </Block>
+        <Divider marginVertical={sizes.s} bg="$blueGray800" />
+        <Block>
+          <Text white h5>
+            Return on Capital Employed
+          </Text>
+          <GuageChart
+            data={
+              props?.data?.returnOnCapitalEmployedAnalysis
+                ?.returnOnCapitalEmployedCurrentYear
+            }
+            data2={
+              props?.data?.returnOnCapitalEmployedAnalysis
+                ?.returnOnCapitalEmployedThreeYearsAgo
+            }
+            legendA={"Last Year"}
+            legendB={"3 Years Ago"}
+          />
         </Block>
       </Block>
     </ScrollView>

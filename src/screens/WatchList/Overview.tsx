@@ -32,6 +32,7 @@ import { ModalBody } from "@gluestack-ui/themed";
 import { ModalFooter } from "@gluestack-ui/themed";
 import { Icon } from "@gluestack-ui/themed";
 import * as Linking from "expo-linking";
+import News from "../../components/News";
 
 export default function Overview(props) {
   const { colors, sizes } = useTheme();
@@ -424,7 +425,7 @@ export default function Overview(props) {
             <PriceHistoryPerformance symb={props.info[0]?.Code} />
           </Block>
           <Block marginVertical={sizes.s}>
-            <Text p semibold>
+            <Text h5 semibold>
               Recent News & Update
             </Text>
             {/* <Block marginTop={sizes.s}>
@@ -467,10 +468,9 @@ export default function Overview(props) {
               </Block>
             </Block> */}
 
-            {props.news?.slice(0, 5).map((item) => {
-              // Convert the string date to a Date object
+            {/* {props.news?.slice(0, 5).map((item) => {
               const publishedDate = new Date(item.PublishedDate);
-              // Format the date as "Month Day" (e.g., "Oct 23")
+
               const formattedDate = publishedDate.toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -492,16 +492,6 @@ export default function Overview(props) {
                           alignItems: "center",
                         }}
                       >
-                        {/* <Ionicons
-                        name="newspaper-outline"
-                        size={20}
-                        color={colors.icon}
-                        style={{
-                          backgroundColor: colors.card,
-                          padding: sizes.s,
-                          borderRadius: 100,
-                        }}
-                      /> */}
                         <Image
                           source={{ uri: item.Image }}
                           style={{ width: 50, height: 50 }}
@@ -519,16 +509,15 @@ export default function Overview(props) {
                     <Block row>
                       <View style={{ width: "10%" }}></View>
                       <View style={{ width: "90%", marginLeft: sizes.sm }}>
-                        {/* Render the formatted date */}
                         <Text gray>{formattedDate}</Text>
                       </View>
                     </Block>
                   </Block>
                 </Pressable>
               );
-            })}
+            })} */}
 
-            <Button
+            {/* <Button
               marginVertical={sizes.s}
               variant="solid"
               bg="#1D2A40"
@@ -539,8 +528,8 @@ export default function Overview(props) {
               ref={ref}
             >
               <ButtonText color="#2394DF">See more updates</ButtonText>
-            </Button>
-            <Modal
+            </Button> */}
+            {/* <Modal
               size={"full"}
               isOpen={showModal}
               onClose={() => {
@@ -564,9 +553,9 @@ export default function Overview(props) {
                   scrollEnabled={true}
                 >
                   {props.news?.map((item) => {
-                    // Convert the string date to a Date object
+                    
                     const publishedDate = new Date(item.PublishedDate);
-                    // Format the date as "Month Day" (e.g., "Oct 23")
+                    
                     const formattedDate = publishedDate.toLocaleDateString(
                       "en-US",
                       {
@@ -591,16 +580,6 @@ export default function Overview(props) {
                                 alignItems: "center",
                               }}
                             >
-                              {/* <Ionicons
-                        name="newspaper-outline"
-                        size={20}
-                        color={colors.icon}
-                        style={{
-                          backgroundColor: colors.card,
-                          padding: sizes.s,
-                          borderRadius: 100,
-                        }}
-                      /> */}
                               <Image
                                 source={{ uri: item.Image }}
                                 style={{ width: 50, height: 50 }}
@@ -640,20 +619,10 @@ export default function Overview(props) {
                   >
                     <ButtonText color={colors.text}>Close</ButtonText>
                   </Button>
-                  {/* <Button
-                      size="sm"
-                      action="positive"
-                      borderWidth="$0"
-                      onPress={() => {
-                        setShowModal(false);
-                      }}
-                    >
-                      <ButtonText>Explore</ButtonText>
-                    </Button> */}
                 </ModalFooter>
               </ModalContent>
-            </Modal>
-            <Modal
+            </Modal> */}
+            {/* <Modal
               size={"full"}
               isOpen={showModal2}
               onClose={() => {
@@ -707,19 +676,12 @@ export default function Overview(props) {
                   >
                     <ButtonText color={colors.text}>Close</ButtonText>
                   </Button>
-                  {/* <Button
-                      size="sm"
-                      action="positive"
-                      borderWidth="$0"
-                      onPress={() => {
-                        setShowModal(false);
-                      }}
-                    >
-                      <ButtonText>Explore</ButtonText>
-                    </Button> */}
+              
                 </ModalFooter>
               </ModalContent>
-            </Modal>
+            </Modal> */}
+
+            {props?.news ? <News news={props?.news} /> : <></>}
           </Block>
 
           <Block>
