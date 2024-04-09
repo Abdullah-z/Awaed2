@@ -12,6 +12,7 @@ import AreaChart from "../../components/Charts/AreaChart";
 
 export default function Valuation(props) {
   const { colors, sizes } = useTheme();
+
   return (
     <ScrollView>
       <Block margin={sizes.s}>
@@ -161,7 +162,12 @@ export default function Valuation(props) {
               Which metric is best to use when looking at relative valuation for{" "}
               {props.info[0]?.Code}?
             </Text>
-            <DonutChart />
+            {props?.data?.keyValuationMetric ? (
+              <DonutChart data={props?.data?.keyValuationMetric} />
+            ) : (
+              <></>
+            )}
+
             <Divider marginVertical={sizes.s} bgColor="$blueGray600" />
           </Block>
           <Text h5 white>
@@ -170,7 +176,7 @@ export default function Valuation(props) {
           <Text marginTop={sizes.s} white>
             How does {props.info[0]?.Code} PE Ratio compare to its peers?
           </Text>
-          <PERatio />
+          <PERatio data={props?.data?.ratiosVsPeers} />
           <Block row marginVertical={sizes.xs}>
             <Ionicons
               name="close-circle-outline"
@@ -198,7 +204,7 @@ export default function Valuation(props) {
               earnings over time. Higher ratios indicate that investors are
               willing to pay more for the stock.
             </Text>
-            <AreaChart />
+            <AreaChart data={props?.data?.historicalRatios} />
           </Block>
         </Block>
       </Block>

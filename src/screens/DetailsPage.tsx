@@ -25,8 +25,10 @@ export default function DetailsPage({ route }) {
   const [news, setNews] = useState();
   const [loading, setLoading] = useState(0);
   const [pastPerformance, setPastPerformance] = useState();
-
-  console.log("NEWS:", news);
+  const [balanceSheet, setBalanceSheet] = useState();
+  const [valuation, setValuation] = useState();
+  const [dividend, setDividend] = useState();
+  console.log("NEWS:", JSON.stringify(dividend));
 
   const { colors } = useTheme();
   const [routes] = React.useState([
@@ -47,7 +49,7 @@ export default function DetailsPage({ route }) {
 
   const renderScene = SceneMap({
     a: (props) => <Overview {...props} info={information} news={news} />,
-    b: (props) => <Valuation {...props} info={information} />,
+    b: (props) => <Valuation {...props} info={information} data={valuation} />,
     // c: Future,
     d: (props) => <Past {...props} data={pastPerformance} />,
     e: (props) => (
@@ -58,7 +60,7 @@ export default function DetailsPage({ route }) {
         DEHA={debtEquityHistory}
       />
     ),
-    f: Dividend,
+    f: (props) => <Dividend {...props} data={dividend} />,
     g: (props) => <Management {...props} info={managementInfo} />,
     h: Ownership,
     i: (props) => <Information {...props} info={information} />,
@@ -234,6 +236,47 @@ export default function DetailsPage({ route }) {
     }
   };
 
+  const GetBalanceSheet = async () => {
+    setLoading(loading + 1);
+    try {
+      const res = await commonDataService.executeApiCall(
+        "api/symbol/$query",
+        `$expand=BalanceSheetStatements($select=Date,NetReceivables,Inventory,CashAndShortTermInvestments,OtherLiabilities,TotalDebt,TotalEquity,AccountPayables),BalanceSheetStatements($filter=Date ge 2023-01-01T00:00:00Z and Date le 2023-12-31T00:00:00Z)&$filter=Code eq 'AAPL'`,
+        "plain/text"
+      );
+      setBalanceSheet(res.data.value[0].BalanceSheetStatements);
+    } catch (error) {
+      setLoading(loading - 1);
+      console.log("error", error);
+    }
+  };
+
+  const GetValuation = async () => {
+    setLoading(loading + 1);
+    try {
+      const res = await commonDataService.fetchData(
+        `${SERVICE_ROUTE.GET_VALUATION}/${symb}`
+      );
+      setValuation(res.data);
+    } catch (error) {
+      setLoading(loading - 1);
+      console.log("error", error);
+    }
+  };
+
+  const GetDividend = async () => {
+    setLoading(loading + 1);
+    try {
+      const res = await commonDataService.fetchData(
+        `${SERVICE_ROUTE.GET_DIVIDEND}/${symb}`
+      );
+      setDividend(res.data);
+    } catch (error) {
+      setLoading(loading - 1);
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     GetInformation();
     GetManagementInfo();
@@ -242,6 +285,9 @@ export default function DetailsPage({ route }) {
     GetDebtEquityHistory();
     GetNews();
     GetPastPerformance();
+    GetBalanceSheet();
+    GetValuation();
+    GetDividend();
   }, []);
 
   return (

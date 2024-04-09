@@ -36,7 +36,7 @@ export default function News(props) {
 
   const ref = React.useRef(null);
   const [modalData, setModalData] = useState();
-  const ModalDate = new Date(modalData?.PublishedDate);
+  const ModalDate = new Date(modalData?.publishedDate);
   // Format the date as "Month Day" (e.g., "Oct 23")
   const formattedModalDate = ModalDate?.toLocaleDateString("en-US", {
     month: "short",
@@ -49,7 +49,7 @@ export default function News(props) {
     <ScrollView>
       {props?.news?.slice(0, 5).map((item) => {
         // Convert the string date to a Date object
-        const publishedDate = new Date(item.PublishedDate);
+        const publishedDate = new Date(item.publishedDate);
         // Format the date as "Month Day" (e.g., "Oct 23")
         const formattedDate = publishedDate.toLocaleDateString("en-US", {
           month: "short",
@@ -63,13 +63,14 @@ export default function News(props) {
               setShowModal2(true);
             }}
           >
-            <Block marginTop={sizes.s} key={item.Id}>
+            <Block marginTop={sizes.s} key={item.id}>
               <Block row align="center">
                 <View
                   style={{
                     width: "10%",
                     marginTop: sizes.s,
                     alignItems: "center",
+                    marginLeft: sizes.s,
                   }}
                 >
                   {/* <Ionicons
@@ -83,8 +84,8 @@ export default function News(props) {
                         }}
                       /> */}
                   <Image
-                    source={{ uri: item.Image }}
-                    style={{ width: 50, height: 50 }}
+                    source={{ uri: item.image }}
+                    style={{ width: 50, height: 50, borderRadius: 25 }}
                   />
                 </View>
                 <View
@@ -93,7 +94,7 @@ export default function News(props) {
                     marginLeft: sizes.sm,
                   }}
                 >
-                  <Text>{item.Title}</Text>
+                  <Text>{item.title}</Text>
                 </View>
               </Block>
               <Block row>
@@ -126,7 +127,6 @@ export default function News(props) {
         onClose={() => {
           setShowModal(false);
         }}
-        finalFocusRef={ref}
       >
         <ModalBackdrop />
         <ModalContent>
@@ -141,7 +141,7 @@ export default function News(props) {
           <ModalBody bgColor={colors.card} height={"70%"} scrollEnabled={true}>
             {props.news?.map((item) => {
               // Convert the string date to a Date object
-              const publishedDate = new Date(item.PublishedDate);
+              const publishedDate = new Date(item.publishedDate);
               // Format the date as "Month Day" (e.g., "Oct 23")
               const formattedDate = publishedDate.toLocaleDateString("en-US", {
                 month: "short",
@@ -155,7 +155,7 @@ export default function News(props) {
                     setShowModal2(true);
                   }}
                 >
-                  <Block marginTop={sizes.s} key={item.Id}>
+                  <Block marginTop={sizes.s} key={item.id}>
                     <Block row align="center">
                       <View
                         style={{
@@ -165,8 +165,12 @@ export default function News(props) {
                         }}
                       >
                         <Image
-                          source={{ uri: item.Image }}
-                          style={{ width: 50, height: 50 }}
+                          source={{ uri: item.image }}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 25,
+                          }}
                         />
                       </View>
                       <View
@@ -175,7 +179,7 @@ export default function News(props) {
                           marginLeft: sizes.sm,
                         }}
                       >
-                        <Text color={colors.text}>{item.Title}</Text>
+                        <Text color={colors.text}>{item.title}</Text>
                       </View>
                     </Block>
                     <Block row>
@@ -210,7 +214,6 @@ export default function News(props) {
         onClose={() => {
           setShowModal2(false);
         }}
-        finalFocusRef={ref}
       >
         <ModalBackdrop />
         <ModalContent>
@@ -224,19 +227,19 @@ export default function News(props) {
           </ModalHeader>
           <ModalBody bgColor={colors.card} height={"70%"} scrollEnabled={true}>
             <Text gray>
-              {formattedModalDate} | {modalData?.Site}
+              {formattedModalDate} | {modalData?.site}
             </Text>
             <Text marginTop={sizes.s} h5 bold color={colors.text}>
-              {modalData?.Title}
+              {modalData?.title}
             </Text>
             <Image
               style={{ marginVertical: sizes.sm }}
-              source={{ uri: modalData?.Image }}
+              source={{ uri: modalData?.image }}
               width={"100%"}
               height={300}
             ></Image>
-            <Text color={colors.text}>{modalData?.Text}</Text>
-            <Pressable onPress={() => Linking.openURL(modalData?.Url)}>
+            <Text color={colors.text}>{modalData?.text}</Text>
+            <Pressable onPress={() => Linking.openURL(modalData?.url)}>
               <Text marginTop={sizes.sm} color={colors.info}>
                 Read Full Article
               </Text>

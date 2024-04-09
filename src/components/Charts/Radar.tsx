@@ -24,7 +24,7 @@ const Radar = (props) => {
         showvalues: "0",
         plotfillalpha: "40",
         labelFontColor: "#ffffff",
-        plottooltext: "Harry's <b>$label</b> skill is rated as <b>$value</b>",
+        plottooltext: "<b>$label</b><b>$value</b>",
       },
       categories: [
         {

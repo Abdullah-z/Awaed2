@@ -1,9 +1,47 @@
-import { View, Text } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { View, Pressable } from "react-native";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
 import { useTheme } from "../../hooks";
-export default function AreaChart() {
+import Text from "../Text";
+import NumberWithCommas from "../NumberWithCommas";
+import Block from "../Block";
+import { Button } from "@gluestack-ui/themed";
+import { ButtonText } from "@gluestack-ui/themed";
+
+export default function AreaChart(props) {
   const { colors, sizes } = useTheme();
+  const [type, setType] = useState("PE");
+  const [showData, setShowData] = useState(false);
+
+  const toggleView = () => {
+    setShowData(!showData);
+  };
+
+  const renderDataList = () => {
+    return props?.data?.map((item, index) => (
+      <View key={index}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: sizes.s,
+          }}
+        >
+          <Text white>{item.date}</Text>
+          <Text bold>
+            {type === "PE"
+              ? NumberWithCommas(item.priceToEarningsRatio)
+              : type === "PS"
+              ? NumberWithCommas(item.priceToSalesRatio)
+              : type === "PB"
+              ? NumberWithCommas(item.priceToBookRatio)
+              : ""}
+          </Text>
+        </View>
+      </View>
+    ));
+  };
+
   const dataSource = {
     type: "splinearea",
     width: "100%",
@@ -11,10 +49,7 @@ export default function AreaChart() {
     dataFormat: "JSON",
     dataSource: {
       chart: {
-        // caption: "Yearly sales of iPhone",
-        // yaxisname: "Number of units sold",
-        // subcaption: "2007-2016",
-        plottooltext: "<div><b>$dataValue</b> iPhones sold in $label</div>",
+        plottooltext: "<div><b>$dataValue</b> $label</div>",
         theme: "fusion",
         labelFontColor: "#ffffff",
         bgColor: colors.tertiary,
@@ -23,53 +58,75 @@ export default function AreaChart() {
         plotBorderThickness: 4,
         drawFullAreaBorder: 0,
         plotBorderColor: "2394DF",
-
         plotFillColor: "#1C3E5A",
         showYAxisValues: "0",
       },
-      data: [
-        {
-          label: "2007",
-          value: "1380000",
-        },
-        {
-          label: "2008",
-          value: "1450000",
-        },
-        {
-          label: "2009",
-          value: "1610000",
-        },
-        {
-          label: "2010",
-          value: "1540000",
-        },
-        {
-          label: "2011",
-          value: "1480000",
-        },
-        {
-          label: "2012",
-          value: "1573000",
-        },
-        {
-          label: "2013",
-          value: "2232000",
-        },
-        {
-          label: "2014",
-          value: "2476000",
-        },
-        {
-          label: "2015",
-          value: "2832000",
-        },
-        {
-          label: "2016",
-          value: "3808000",
-        },
-      ],
+      data: props?.data?.map((item) => ({
+        label: item.date,
+        value:
+          type === "PE"
+            ? item.priceToEarningsRatio
+            : type === "PS"
+            ? item.priceToSalesRatio
+            : type === "PB"
+            ? item.priceToBookRatio
+            : 0,
+      })),
     },
   };
-  return <ReactNativeFusionCharts chartConfig={dataSource} />;
+
+  return (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          borderRadius: 10,
+          marginTop: sizes.s,
+          overflow: "hidden",
+        }}
+      >
+        {["PE", "PS", "PB"].map((chartType) => (
+          <Block
+            padding={8}
+            color={type === chartType ? "#1D2A40" : colors.tertiary}
+            justify="center"
+            radius={type === chartType ? 10 : 0}
+          >
+            <Pressable
+              onPress={() => {
+                setType(chartType);
+              }}
+            >
+              <Text center color={colors.white} semibold>
+                {chartType}
+              </Text>
+            </Pressable>
+          </Block>
+        ))}
+      </View>
+
+      {!showData ? (
+        <ReactNativeFusionCharts chartConfig={dataSource} />
+      ) : (
+        <View style={{ marginHorizontal: sizes.xs, marginTop: sizes.s }}>
+          {renderDataList()}
+        </View>
+      )}
+
+      <View style={{ margin: sizes.s, alignItems: "flex-end" }}>
+        <Button
+          width={"25%"}
+          size="sm"
+          variant="solid"
+          action="secondary"
+          bgColor={colors.background}
+          isDisabled={false}
+          isFocusVisible={false}
+          onPress={toggleView}
+        >
+          <ButtonText>Data</ButtonText>
+        </Button>
+      </View>
+    </View>
+  );
 }

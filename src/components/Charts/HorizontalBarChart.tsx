@@ -32,6 +32,8 @@ const HorizontalBarChart = () => {
         labelFontColor: "#ffffff",
         showYAxisValues: "0",
         divlinealpha: "0",
+        showvalues: "1",
+        valueFontColor: "#ffff",
         exportEnabled: 0, // to enable the export chart functionality
       },
       data: chartData.map((item) => ({

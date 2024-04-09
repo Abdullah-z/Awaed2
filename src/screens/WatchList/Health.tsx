@@ -8,7 +8,7 @@ import MultiAreaChart from "../../components/Charts/MultiAreaChart";
 import TreeMap from "../../components/Charts/TreeMap";
 
 export function formatNumberWithSuffix(number) {
-  const suffixes = ["", "k", "m", "b"]; // Suffixes for thousand, million, and billion
+  const suffixes = ["", "k", "m", "b", "t"]; // Suffixes for thousand, million, billion, and trillion
   const suffixIndex = Math.floor(Math.log10(Math.abs(number)) / 3); // Determine suffix index
   const adjustedNumber = number / Math.pow(1000, suffixIndex); // Adjust the number
   const suffix = suffixes[suffixIndex]; // Get the appropriate suffix
@@ -138,6 +138,11 @@ export default function Health(props) {
           Debt to Equity History and Analysis
         </Text>
         <MultiAreaChart data={props.DEHA} />
+      </Block>
+      <Block tertiary>
+        <Text h5 white marginLeft={sizes.s}>
+          Balance Sheet
+        </Text>
         <TreeMap />
       </Block>
     </ScrollView>
