@@ -28,7 +28,8 @@ export default function DetailsPage({ route }) {
   const [balanceSheet, setBalanceSheet] = useState();
   const [valuation, setValuation] = useState();
   const [dividend, setDividend] = useState();
-  console.log("NEWS:", JSON.stringify(dividend));
+  const [overview, setOverview] = useState();
+  console.log("NEWS:", JSON.stringify(overview));
 
   const { colors } = useTheme();
   const [routes] = React.useState([
@@ -48,7 +49,7 @@ export default function DetailsPage({ route }) {
   const { symb } = route.params;
 
   const renderScene = SceneMap({
-    a: (props) => <Overview {...props} info={information} news={news} />,
+    a: (props) => <Overview {...props} info={information} data={overview} />,
     b: (props) => <Valuation {...props} info={information} data={valuation} />,
     // c: Future,
     d: (props) => <Past {...props} data={pastPerformance} />,
@@ -201,27 +202,27 @@ export default function DetailsPage({ route }) {
       });
   };
 
-  const GetNews = async () => {
-    setLoading(loading + 1);
-    await commonDataService
-      .executeApiCall(
-        "api/symbol/$query",
-        `$filter=Code eq '${symb}'&$expand=News($top=10)`,
-        "plain/text"
-      )
-      .then(async (res) => {
-        setLoading(loading - 1);
+  // const GetNews = async () => {
+  //   setLoading(loading + 1);
+  //   await commonDataService
+  //     .executeApiCall(
+  //       "api/symbol/$query",
+  //       `$filter=Code eq '${symb}'&$expand=News($top=10)`,
+  //       "plain/text"
+  //     )
+  //     .then(async (res) => {
+  //       setLoading(loading - 1);
 
-        setNews(res?.data?.value[0].News);
-      })
-      .catch((error) => {
-        setLoading(loading - 1);
-        console.log(
-          "key info error:",
-          error.response ? error.response.data : error
-        );
-      });
-  };
+  //       setNews(res?.data?.value[0].News);
+  //     })
+  //     .catch((error) => {
+  //       setLoading(loading - 1);
+  //       console.log(
+  //         "key info error:",
+  //         error.response ? error.response.data : error
+  //       );
+  //     });
+  // };
 
   const GetPastPerformance = async () => {
     setLoading(loading + 1);
@@ -277,17 +278,30 @@ export default function DetailsPage({ route }) {
     }
   };
 
+  const GetOverview = async () => {
+    setLoading(loading + 1);
+    try {
+      const res = await commonDataService.fetchData(
+        `${SERVICE_ROUTE.GET_OVERVIEW}/${symb}`
+      );
+      setOverview(res.data);
+    } catch (error) {
+      setLoading(loading - 1);
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     GetInformation();
     GetManagementInfo();
     GetKeyInfo();
     GetFinPositionAnalysis();
     GetDebtEquityHistory();
-    GetNews();
     GetPastPerformance();
     GetBalanceSheet();
     GetValuation();
     GetDividend();
+    GetOverview();
   }, []);
 
   return (

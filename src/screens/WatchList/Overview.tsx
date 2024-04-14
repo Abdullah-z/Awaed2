@@ -33,6 +33,10 @@ import { ModalFooter } from "@gluestack-ui/themed";
 import { Icon } from "@gluestack-ui/themed";
 import * as Linking from "expo-linking";
 import News from "../../components/News";
+import { formatNumberWithSuffix } from "./Health";
+import FundamentalSummary from "../../components/Charts/FundamentalSummary";
+import EarningsRevenue from "../../components/Charts/EarningsRevenue";
+import NumberWithCommas from "../../components/NumberWithCommas";
 
 export default function Overview(props) {
   const { colors, sizes } = useTheme();
@@ -130,15 +134,15 @@ export default function Overview(props) {
             <Image
               style={{ width: 60, height: 60 }}
               source={{
-                uri: props.info[0]?.Profile?.Image,
+                uri: props?.data?.companyInformation?.icon,
               }}
             />
             <Block marginLeft={sizes.s}>
-              <Text h4>{props.info[0]?.Name}</Text>
+              <Text h4>{props?.data?.companyInformation?.name}</Text>
 
               <Block row>
-                {/* <Text gray>NasdaqGS:</Text> */}
-                <Text gray>{props.info[0]?.Code}</Text>
+                <Text gray>{props?.data?.companyInformation?.exchange}:</Text>
+                <Text gray>{props?.data?.companyInformation?.symbol}</Text>
               </Block>
             </Block>
           </Block>
@@ -150,7 +154,8 @@ export default function Overview(props) {
               action="primary"
               onPress={() => {
                 const existingIndex = portfolio.findIndex(
-                  (item) => item.symb === props.info[0]?.Code
+                  (item) =>
+                    item.symb === props?.data?.companyInformation?.symbol
                 );
                 if (existingIndex !== -1) {
                   setPortfolio((oldData) => {
@@ -161,13 +166,16 @@ export default function Overview(props) {
                 } else {
                   setPortfolio((oldData) => [
                     ...oldData,
-                    { symb: props.info[0]?.Code },
+                    { symb: props?.data?.companyInformation?.symbol },
                   ]);
                 }
               }}
             >
               <ButtonText color="#2394DF">
-                {portfolio.some((item) => item.symb === props.info[0]?.Code)
+                {portfolio.some(
+                  (item) =>
+                    item.symb === props?.data?.companyInformation?.symbol
+                )
                   ? "Remove from Portfolio"
                   : "Add to Portfolio"}
               </ButtonText>
@@ -176,22 +184,30 @@ export default function Overview(props) {
           <Block row>
             <View style={{ width: "25%" }}>
               <Text gray>LAST PRICE</Text>
-              <Text bold>-DATA-</Text>
+              <Text bold>
+                {props?.data?.companyInformation?.currency}{" "}
+                {props?.data?.keyInformation?.lastPrice}
+              </Text>
             </View>
             <View style={{ width: "25%" }}>
               <Text gray>MARKET CAP</Text>
-              <Text bold>-DATA-</Text>
+              <Text bold>
+                {props?.data?.companyInformation?.currency}{" "}
+                {formatNumberWithSuffix(
+                  props?.data?.keyInformation?.marketCapital
+                )}
+              </Text>
             </View>
           </Block>
 
           <Block row style={{ marginTop: sizes.s }}>
             <View style={{ width: "25%" }}>
               <Text gray>7D</Text>
-              <Text bold>-DATA-</Text>
+              <Text bold>{props?.data?.keyInformation?.sevenDayReturns}</Text>
             </View>
             <View style={{ width: "25%" }}>
               <Text gray>1Y</Text>
-              <Text bold>-DATA-</Text>
+              <Text bold>{props?.data?.keyInformation?.oneYearReturn}</Text>
             </View>
             <View style={{ width: "50%" }}>
               <ReactNativeFusionCharts chartConfig={chartConfigs} />
@@ -211,13 +227,14 @@ export default function Overview(props) {
         </Block>
         <Block marginTop={sizes.sm}>
           <Block>
-            <Text marginBottom={sizes.s} h5 gray>
-              {props.info[0]?.Code} Stock Overview
+            <Text marginBottom={sizes.s} h5 white>
+              {props?.data?.companyInformation?.symbol} Stock Overview
             </Text>
             <Block tertiary radius={sizes.sm} padding={sizes.sm}>
               <Text>
-                {props.info[0]?.Profile?.Description &&
-                  props.info[0]?.Profile?.Description.split(".")
+                {props?.data?.companyInformation?.description &&
+                  props?.data?.companyInformation?.description
+                    .split(".")
                     .slice(0, 2)
                     .join(".")}
               </Text>
@@ -328,7 +345,7 @@ export default function Overview(props) {
         >
           <Block row>
             <Block>
-              <Text gray h5>
+              <Text white h5>
                 Narratives
               </Text>
             </Block>
@@ -397,8 +414,8 @@ export default function Overview(props) {
           padding={sizes.sm}
           radius={sizes.sm}
         >
-          <Text gray marginVertical={sizes.s} h5>
-            {props.info[0]?.Name} Competitors
+          <Text white marginVertical={sizes.s} h5>
+            {props?.data?.companyInformation?.name} Competitors
           </Text>
           <Block>
             <ScrollView style={{ marginTop: sizes.s }} horizontal>
@@ -418,11 +435,13 @@ export default function Overview(props) {
           </Block>
         </Block>
         <Block radius={sizes.sm} marginTop={sizes.sm} tertiary>
-          <Text padding={sizes.sm} gray h5>
+          <Text padding={sizes.sm} white h5>
             Price & History Performance
           </Text>
           <Block>
-            <PriceHistoryPerformance symb={props.info[0]?.Code} />
+            <PriceHistoryPerformance
+              symb={props?.data?.companyInformation?.symbol}
+            />
           </Block>
           <Block marginVertical={sizes.s}>
             <Text h5 semibold>
@@ -681,11 +700,11 @@ export default function Overview(props) {
               </ModalContent>
             </Modal> */}
 
-            {props?.news ? <News news={props?.news} /> : <></>}
+            <News news={props?.data?.recentNews} />
           </Block>
 
           <Block>
-            <Text marginBottom={sizes.s} h5 bold gray>
+            <Text marginBottom={sizes.s} h5 bold hite>
               Shareholder Returns
             </Text>
 
@@ -712,7 +731,7 @@ export default function Overview(props) {
               </Block>
               <Block>
                 <Block>
-                  <Text gray>{props.info[0]?.Code}</Text>
+                  <Text gray>{props?.data?.companyInformation?.symbol}</Text>
                 </Block>
                 <Block>
                   <Text bold danger>
@@ -818,23 +837,23 @@ export default function Overview(props) {
           padding={sizes.sm}
           radius={sizes.sm}
         >
-          <Text gray marginVertical={sizes.s} h5>
+          <Text white marginBottom={sizes.s} h5>
             About the Company
           </Text>
           <Block row>
             <Block>
               <Text gray>CEO</Text>
-              <Text bold>{props.info[0]?.Profile?.Ceo}</Text>
+              <Text bold>{props?.data?.companyInformation?.ceo}</Text>
             </Block>
             <Block>
               <Text gray>Employees</Text>
-              <Text bold>{props.info[0]?.Profile?.FullTimeEmployees}</Text>
+              <Text bold>{props?.data?.companyInformation?.employees}</Text>
             </Block>
           </Block>
           <Block marginVertical={sizes.s}>
             <Text gray>Website:</Text>
             <Text bold info>
-              {props.info[0]?.Profile?.Website}
+              {props?.data?.companyInformation?.website}
             </Text>
           </Block>
           <Divider
@@ -845,9 +864,113 @@ export default function Overview(props) {
               bg: colors.gray,
             }}
           />
-          <Text>{props.info[0]?.Profile?.Description}</Text>
+          <Text>{props?.data?.companyInformation?.description}</Text>
         </Block>
-        {/* <SankeyChart /> */}
+
+        <Block tertiary radius={15}>
+          <Text h5 white margin={sizes.sm}>
+            {props?.data?.companyInformation?.name} Fundamentals Summary
+          </Text>
+          <FundamentalSummary data={props?.data?.fundamentalSummary} />
+        </Block>
+
+        <Block tertiary radius={15} marginVertical={sizes.s}>
+          <Text h5 white margin={sizes.sm}>
+            Earnings & Revenue
+          </Text>
+          <EarningsRevenue data={props?.data?.earningsAndRevenue} />
+          <Divider mb={1} bg="$blueGray800" />
+
+          <Block marginHorizontal={sizes.s}>
+            <Block
+              row
+              justifyContent="space-between"
+              style={{
+                marginVertical: sizes.s,
+              }}
+            >
+              <Text gray>Earnings per share (EPS)</Text>
+              <Text bold>
+                {NumberWithCommas(props?.data?.earningsAndRevenue?.eps)}
+              </Text>
+            </Block>
+            <Divider mb={1} bg="$blueGray800" />
+            <Block
+              row
+              justifyContent="space-between"
+              style={{
+                marginBottom: sizes.s,
+              }}
+            >
+              <Text gray>Gross Margin</Text>
+              <Text bold>
+                {NumberWithCommas(props?.data?.earningsAndRevenue?.grossMargin)}
+                %
+              </Text>
+            </Block>
+            <Divider mb={1} bg="$blueGray800" />
+            <Block
+              row
+              justifyContent="space-between"
+              style={{
+                marginBottom: sizes.s,
+              }}
+            >
+              <Text gray>Net Profit Margin</Text>
+              <Text bold>
+                {NumberWithCommas(
+                  props?.data?.earningsAndRevenue?.netProfitMargin
+                )}
+                %
+              </Text>
+            </Block>
+            <Divider mb={1} bg="$blueGray800" />
+            <Block
+              row
+              justifyContent="space-between"
+              style={{
+                marginBottom: sizes.s,
+              }}
+            >
+              <Text gray>Debt/Equity Ratio</Text>
+              <Text bold>
+                {NumberWithCommas(
+                  props?.data?.earningsAndRevenue?.debtEquityRatio
+                )}
+                %
+              </Text>
+            </Block>
+          </Block>
+        </Block>
+        <Block tertiary radius={15} marginVertical={sizes.s}>
+          <Text h5 white margin={sizes.sm}>
+            Dividends
+          </Text>
+          <Block row marginBottom={sizes.s}>
+            <Block>
+              <Text bold center>
+                {NumberWithCommas(
+                  props?.data?.dividendInformation?.currentDividendYield
+                )}
+                %
+              </Text>
+              <Text center gray>
+                Current Dividend Yield
+              </Text>
+            </Block>
+            <Block>
+              <Text bold center>
+                {NumberWithCommas(
+                  props?.data?.dividendInformation?.payoutRatio
+                )}
+                %
+              </Text>
+              <Text center gray>
+                Payout Ratio
+              </Text>
+            </Block>
+          </Block>
+        </Block>
       </Block>
     </ScrollView>
   );

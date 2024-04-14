@@ -6,19 +6,11 @@ import { formatNumberWithSuffix } from "../../screens/WatchList/Health";
 
 const WaterfallChart = (props) => {
   const { colors, sizes } = useTheme();
-  const data = {
-    depreciationAndAmortization: 11519000000,
-    earnings: 96995000000,
-    freeCashFlow: 99584000000,
-    netWorkingCapital: -6577000000,
-    others: -7349000000,
-    stockBasedCompensation: 10833000000,
-  };
 
   const chartConfig = {
     type: "waterfall2d",
     width: "100%",
-    height: 300,
+    height: 400,
     dataFormat: "json",
     dataSource: {
       chart: {

@@ -7,4 +7,5 @@ export const SERVICE_ROUTE = {
   GET_PAST_PERFORMANCE: "api/symbolDetail/pastperformance",
   GET_VALUATION: "api/symbolDetail/valuation",
   GET_DIVIDEND: "api/symbolDetail/dividend",
+  GET_OVERVIEW: "api/symbolDetail/overview",
 };

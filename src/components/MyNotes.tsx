@@ -206,7 +206,7 @@ export default function MyNotes() {
         </ModalContent>
       </Modal>
       <Block padding={sizes.sm} radius={sizes.sm} tertiary marginTop={sizes.sm}>
-        <Text gray h5 marginBottom={sizes.s}>
+        <Text white h5 marginBottom={sizes.s}>
           My Notes
         </Text>
 
