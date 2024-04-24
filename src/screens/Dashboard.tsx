@@ -21,7 +21,7 @@ export default function Dashboard() {
   const { sizes, colors } = useTheme();
   const [routes] = React.useState([
     { key: "first", title: "My Updates" },
-    { key: "second", title: "Performance" },
+    { key: "second", title: "Market Performance" },
     { key: "third", title: "Calendar" },
   ]);
   return (

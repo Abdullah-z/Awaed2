@@ -2,7 +2,7 @@ import { View } from "react-native";
 import React, { useState } from "react";
 import { ScrollView } from "react-native";
 import { Pressable } from "react-native";
-import { useTheme } from "../hooks";
+import { useTheme, useTranslation } from "../hooks";
 import Block from "./Block";
 import Text from "./Text";
 import { Image } from "react-native";
@@ -33,6 +33,7 @@ export default function News(props) {
 
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
+  const { t, locale } = useTranslation();
 
   const ref = React.useRef(null);
   const [modalData, setModalData] = useState();
@@ -94,7 +95,7 @@ export default function News(props) {
                     marginLeft: sizes.sm,
                   }}
                 >
-                  <Text>{item.title}</Text>
+                  <Text textBreakStrategy="simple">{item.title}</Text>
                 </View>
               </Block>
               <Block row>
@@ -119,7 +120,7 @@ export default function News(props) {
         onPress={() => setShowModal(true)}
         ref={ref}
       >
-        <ButtonText color="#2394DF">See more updates</ButtonText>
+        <ButtonText color="#2394DF">{t("seeMoreUpdates")}</ButtonText>
       </Button>
       <Modal
         size={"full"}
@@ -132,7 +133,7 @@ export default function News(props) {
         <ModalContent>
           <ModalHeader bgColor={colors.card}>
             <Heading size="lg" color={colors.text}>
-              News & Updates
+              {t("newsUpdate")}
             </Heading>
             <ModalCloseButton>
               <Icon color={colors.text} as={CloseIcon} />
@@ -203,7 +204,7 @@ export default function News(props) {
                 setShowModal(false);
               }}
             >
-              <ButtonText color={colors.text}>Close</ButtonText>
+              <ButtonText color={colors.text}>{t("close")}</ButtonText>
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -241,7 +242,7 @@ export default function News(props) {
             <Text color={colors.text}>{modalData?.text}</Text>
             <Pressable onPress={() => Linking.openURL(modalData?.url)}>
               <Text marginTop={sizes.sm} color={colors.info}>
-                Read Full Article
+                {t("readFullArticle")}
               </Text>
             </Pressable>
           </ModalBody>
@@ -255,7 +256,7 @@ export default function News(props) {
                 setShowModal2(false);
               }}
             >
-              <ButtonText color={colors.text}>Close</ButtonText>
+              <ButtonText color={colors.text}>{t("close")}</ButtonText>
             </Button>
           </ModalFooter>
         </ModalContent>

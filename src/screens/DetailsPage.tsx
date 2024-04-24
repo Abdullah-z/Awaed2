@@ -4,7 +4,7 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import Overview from "./WatchList/Overview";
 import Valuation from "./WatchList/Valuation";
 import Future from "./WatchList/Future";
-import { useTheme } from "../hooks";
+import { useTheme, useTranslation } from "../hooks";
 import Past from "./WatchList/Past";
 import Health from "./WatchList/Health";
 import Dividend from "./WatchList/Dividend";
@@ -31,17 +31,19 @@ export default function DetailsPage({ route }) {
   const [overview, setOverview] = useState();
   console.log("NEWS:", JSON.stringify(overview));
 
+  const { t, locale } = useTranslation();
+
   const { colors } = useTheme();
   const [routes] = React.useState([
-    { key: "a", title: "Overview" },
-    { key: "b", title: "Valuation" },
+    { key: "a", title: t("overview") },
+    { key: "b", title: t("valuation") },
     // { key: "c", title: "Future" },
-    { key: "d", title: "Past" },
-    { key: "e", title: "Financial Health" },
-    { key: "f", title: "Dividend" },
-    { key: "g", title: "Management" },
-    { key: "h", title: "Ownership" },
-    { key: "i", title: "Information" },
+    { key: "d", title: t("past") },
+    { key: "e", title: t("financialHealth") },
+    { key: "f", title: t("dividend") },
+    { key: "g", title: t("management") },
+    { key: "h", title: t("ownership") },
+    { key: "i", title: t("information") },
   ]);
 
   const commonDataService = new CommonDataService();
@@ -104,102 +106,142 @@ export default function DetailsPage({ route }) {
   }
 
   const GetInformation = async () => {
-    setLoading(loading + 1);
-    await commonDataService
-      .fetchData(`api/symbol?$filter=Code eq '${symb}'&$expand=Profile`)
-      .then(
-        async (res) => {
-          setLoading(loading - 1);
-          setInformation(res?.data?.value);
-        },
-        (error) => {
-          setLoading(loading - 1);
-          console.log("error" + error);
-        }
-      );
+    try {
+      // Increment loading count when fetching starts
+      setLoading(loading + 1);
+
+      await commonDataService
+        .fetchData(`api/symbol?$filter=Code eq '${symb}'&$expand=Profile`)
+        .then(
+          async (res) => {
+            setInformation(res?.data?.value);
+            // Decrement loading count once data is fetched
+            setLoading(loading - 1);
+          },
+          (error) => {
+            console.log("error" + error);
+            // Decrement loading count if an error occurs
+            setLoading(loading - 1);
+          }
+        );
+    } catch (error) {
+      console.log("Error occurred:", error);
+      setLoading(loading - 1);
+    }
   };
 
   const GetManagementInfo = async () => {
-    setLoading(loading + 1);
-    await commonDataService
-      .fetchData(`api/symbol?$filter=Code eq '${symb}'&$expand=KeyExecutives`)
-      .then(
-        async (res) => {
-          setLoading(loading - 1);
-          setManagementInfo(res?.data?.value);
-        },
-        (error) => {
-          setLoading(loading - 1);
-          console.log("error on text plain" + error);
-        }
-      );
+    try {
+      setLoading(loading + 1);
+
+      await commonDataService
+        .fetchData(`api/symbol?$filter=Code eq '${symb}'&$expand=KeyExecutives`)
+        .then(
+          async (res) => {
+            setManagementInfo(res?.data?.value);
+
+            setLoading(loading - 1);
+          },
+          (error) => {
+            console.log("error on text plain" + error);
+
+            setLoading(loading - 1);
+          }
+        );
+    } catch (error) {
+      console.log("Error occurred:", error);
+      setLoading(loading - 1);
+    }
   };
 
   const GetKeyInfo = async () => {
-    setLoading(loading + 1);
-    await commonDataService
-      .executeApiCall(
-        "api/symbol/$query",
-        `$expand=BalanceSheetStatements($select=Date,TotalLiabilities,TotalAssets,TotalEquity,CalendarYear,TotalDebt,TotalEquity,ReportedCurrency),BalanceSheetStatements($filter=Date ge 2023-01-01T00:00:00Z and Date le 2023-12-31T00:00:00Z)&$filter=Code eq '${symb}'`,
-        "plain/text"
-      )
-      .then(async (res) => {
-        setLoading(loading - 1);
-        setKeyHealthInfo(res.data.value);
-        // Assuming data property holds response content
-      })
-      .catch((error) => {
-        setLoading(loading - 1);
-        console.log(
-          "key info error:",
-          error.response ? error.response.data : error
-        ); // Log specific error data if available
-      });
+    try {
+      setLoading(loading + 1);
+
+      await commonDataService
+        .executeApiCall(
+          "api/symbol/$query",
+          `$expand=BalanceSheetStatements($select=Date,TotalLiabilities,TotalAssets,TotalEquity,CalendarYear,TotalDebt,TotalEquity,ReportedCurrency),BalanceSheetStatements($filter=Date ge 2023-01-01T00:00:00Z and Date le 2023-12-31T00:00:00Z)&$filter=Code eq '${symb}'`,
+          "plain/text"
+        )
+        .then(async (res) => {
+          setKeyHealthInfo(res.data.value);
+
+          setLoading(loading - 1);
+        })
+        .catch((error) => {
+          console.log(
+            "key info error:",
+            error.response ? error.response.data : error
+          );
+          setLoading(loading - 1);
+        });
+    } catch (error) {
+      console.log("Error occurred:", error);
+      setLoading(loading - 1);
+    }
   };
 
   const GetFinPositionAnalysis = async () => {
-    setLoading(loading + 1);
-    await commonDataService
-      .executeApiCall(
-        "api/symbol/$query",
-        `$expand=BalanceSheetStatements($select=Date,ShortTermInvestments,ShortTermDebt,LongTermDebt,LongTermInvestments,ReportedCurrency),BalanceSheetStatements($filter=Date ge 2023-01-01T00:00:00Z and Date le 2023-12-31T00:00:00Z)&$filter=Code eq '${symb}'`,
-        "plain/text"
-      )
-      .then(async (res) => {
-        setLoading(loading - 1);
-        setFinPositionAnalysis(res.data.value);
-      })
-      .catch((error) => {
-        setLoading(loading - 1);
-        console.log(
-          "key info error:",
-          error.response ? error.response.data : error
-        ); // Log specific error data if available
-      });
+    try {
+      // Increment loading count when fetching starts
+      setLoading(loading + 1);
+
+      await commonDataService
+        .executeApiCall(
+          "api/symbol/$query",
+          `$expand=BalanceSheetStatements($select=Date,ShortTermInvestments,ShortTermDebt,LongTermDebt,LongTermInvestments,ReportedCurrency),BalanceSheetStatements($filter=Date ge 2023-01-01T00:00:00Z and Date le 2023-12-31T00:00:00Z)&$filter=Code eq '${symb}'`,
+          "plain/text"
+        )
+        .then(async (res) => {
+          setFinPositionAnalysis(res.data.value);
+          // Decrement loading count once data is fetched
+          setLoading(loading - 1);
+        })
+        .catch((error) => {
+          // If an error occurs, log the error and decrement loading count
+          console.log(
+            "key info error:",
+            error.response ? error.response.data : error
+          ); // Log specific error data if available
+          setLoading(loading - 1);
+        });
+    } catch (error) {
+      console.log("Error occurred:", error);
+      setLoading(loading - 1);
+    }
   };
 
   const GetDebtEquityHistory = async () => {
-    setLoading(loading + 1);
-    await commonDataService
-      .executeApiCall(
-        "api/symbol/$query",
-        `$expand=BalanceSheetStatements($select=CalendarYear,TotalDebt,TotalEquity,CashAndCashEquivalents,ReportedCurrency)&$filter=Code eq '${symb}'`,
-        "plain/text"
-      )
-      .then(async (res) => {
-        setLoading(loading - 1);
-        const result = transformData(res.data.value);
+    try {
+      // Set loading to true when fetching data starts
+      setLoading(loading + 1);
 
-        setDebtEquityHistory(result);
-        // Assuming data property holds response content
-      })
-      .catch((error) => {
-        setLoading(loading - 1);
-        console.log(
-          "key info error:",
-          error.response ? error.response.data : error
-        ); // Log specific error data if available
-      });
+      await commonDataService
+        .executeApiCall(
+          "api/symbol/$query",
+          `$expand=BalanceSheetStatements($select=CalendarYear,TotalDebt,TotalEquity,CashAndCashEquivalents,ReportedCurrency)&$filter=Code eq '${symb}'`,
+          "plain/text"
+        )
+        .then(async (res) => {
+          const result = transformData(res.data.value);
+
+          // Once data is fetched, set the debtEquityHistory state and loading to false
+          setDebtEquityHistory(result);
+          setLoading(loading - 1);
+        })
+        .catch((error) => {
+          // If an error occurs, log the error and set loading to false
+          console.log(
+            "key info error:",
+            error.response ? error.response.data : error
+          ); // Log specific error data if available
+          setLoading(loading - 1);
+        });
+    } catch (error) {
+      console.log("Error occurred:", error);
+      setLoading(loading - 1);
+    }
   };
 
   // const GetNews = async () => {
@@ -225,12 +267,13 @@ export default function DetailsPage({ route }) {
   // };
 
   const GetPastPerformance = async () => {
-    setLoading(loading + 1);
     try {
+      setLoading(loading + 1);
       const res = await commonDataService.fetchData(
         `${SERVICE_ROUTE.GET_PAST_PERFORMANCE}/${symb}`
       );
       setPastPerformance(res.data);
+      setLoading(loading - 1);
     } catch (error) {
       setLoading(loading - 1);
       console.log("error", error);
@@ -238,14 +281,15 @@ export default function DetailsPage({ route }) {
   };
 
   const GetBalanceSheet = async () => {
-    setLoading(loading + 1);
     try {
+      setLoading(loading + 1);
       const res = await commonDataService.executeApiCall(
         "api/symbol/$query",
         `$expand=BalanceSheetStatements($select=Date,NetReceivables,Inventory,CashAndShortTermInvestments,OtherLiabilities,TotalDebt,TotalEquity,AccountPayables),BalanceSheetStatements($filter=Date ge 2023-01-01T00:00:00Z and Date le 2023-12-31T00:00:00Z)&$filter=Code eq 'AAPL'`,
         "plain/text"
       );
       setBalanceSheet(res.data.value[0].BalanceSheetStatements);
+      setLoading(loading - 1);
     } catch (error) {
       setLoading(loading - 1);
       console.log("error", error);
@@ -253,12 +297,13 @@ export default function DetailsPage({ route }) {
   };
 
   const GetValuation = async () => {
-    setLoading(loading + 1);
     try {
+      setLoading(loading + 1);
       const res = await commonDataService.fetchData(
         `${SERVICE_ROUTE.GET_VALUATION}/${symb}`
       );
       setValuation(res.data);
+      setLoading(loading - 1);
     } catch (error) {
       setLoading(loading - 1);
       console.log("error", error);
@@ -266,12 +311,13 @@ export default function DetailsPage({ route }) {
   };
 
   const GetDividend = async () => {
-    setLoading(loading + 1);
     try {
+      setLoading(loading + 1);
       const res = await commonDataService.fetchData(
         `${SERVICE_ROUTE.GET_DIVIDEND}/${symb}`
       );
       setDividend(res.data);
+      setLoading(loading - 1);
     } catch (error) {
       setLoading(loading - 1);
       console.log("error", error);
@@ -279,15 +325,21 @@ export default function DetailsPage({ route }) {
   };
 
   const GetOverview = async () => {
-    setLoading(loading + 1);
     try {
+      // Set loading to true when fetching data starts
+      setLoading(loading + 1);
+
       const res = await commonDataService.fetchData(
         `${SERVICE_ROUTE.GET_OVERVIEW}/${symb}`
       );
+
+      // Once data is fetched, set the overview state and loading to false
       setOverview(res.data);
-    } catch (error) {
       setLoading(loading - 1);
+    } catch (error) {
+      // If an error occurs, log the error and set loading to false
       console.log("error", error);
+      setLoading(loading - 1);
     }
   };
 

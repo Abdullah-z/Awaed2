@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
-import { useTheme } from "../../hooks";
+import { useTheme, useTranslation } from "../../hooks";
 import { formatNumberWithSuffix } from "../../screens/WatchList/Health";
 import Block from "../Block";
 import Text from "../Text";
@@ -10,6 +10,7 @@ import { Button, ButtonText, Divider } from "@gluestack-ui/themed";
 const EarningsRevenue = (props) => {
   const { colors, sizes } = useTheme();
   const [showData, setShowData] = useState();
+  const { t, locale } = useTranslation();
 
   const chartConfig = {
     type: "waterfall2d",
@@ -27,26 +28,26 @@ const EarningsRevenue = (props) => {
         plottooltext: "<b>$label</b>: $value",
         rotateLabels: "1",
         valueFontColor: "#ffff",
-        sumlabel: "Earnings",
+        sumlabel: t("earnings"),
       },
       data: [
         {
-          label: "Revenue",
+          label: t("revenue"),
           value: props?.data?.revenue,
           color: "#2394DF",
         },
         {
-          label: "Cost of Revenue",
+          label: t("costofRevenue"),
           value: props?.data?.costOfRevenue * -1,
           color: "#803237",
         },
         {
-          label: "Gross Profit",
+          label: t("grossProfit"),
           issum: "1",
           color: "#2DC97E",
         },
         {
-          label: "Other Expenses",
+          label: t("otherExpenses"),
           value: props?.data?.otherExpenses,
           color: "#803237",
         },
@@ -66,63 +67,63 @@ const EarningsRevenue = (props) => {
         <ReactNativeFusionCharts chartConfig={chartConfig} modules={modules} />
       ) : (
         <Block marginHorizontal={sizes.s}>
-          <Text gray>Income Statement (TTM)</Text>
+          <Text gray>{t("incomeStatement")} (TTM)</Text>
           <Block
-            row
             justifyContent="space-between"
             style={{
               marginVertical: sizes.s,
+              flexDirection: locale === "ar" ? "row-reverse" : "row",
             }}
           >
-            <Text>Revenue</Text>
+            <Text>{t("revenue")}</Text>
             <Text bold>{formatNumberWithSuffix(props?.data?.revenue)}</Text>
           </Block>
           <Divider mb={1} bg="$blueGray800" />
           <Block
-            row
             justifyContent="space-between"
             style={{
               marginBottom: sizes.s,
+              flexDirection: locale === "ar" ? "row-reverse" : "row",
             }}
           >
-            <Text>Cost of Revenue</Text>
+            <Text>{t("costofRevenue")}</Text>
             <Text bold>
               {formatNumberWithSuffix(props?.data?.costOfRevenue)}
             </Text>
           </Block>
           <Divider mb={1} bg="$blueGray800" />
           <Block
-            row
             justifyContent="space-between"
             style={{
               marginBottom: sizes.s,
+              flexDirection: locale === "ar" ? "row-reverse" : "row",
             }}
           >
-            <Text>Gross Profit</Text>
+            <Text>{t("grossProfit")}</Text>
             <Text bold>{formatNumberWithSuffix(props?.data?.grossProfit)}</Text>
           </Block>
           <Divider mb={1} bg="$blueGray800" />
           <Block
-            row
             justifyContent="space-between"
             style={{
               marginBottom: sizes.s,
+              flexDirection: locale === "ar" ? "row-reverse" : "row",
             }}
           >
-            <Text>Other Expenses</Text>
+            <Text>{t("otherExpenses")}</Text>
             <Text bold>
               {formatNumberWithSuffix(props?.data?.otherExpenses)}
             </Text>
           </Block>
           <Divider mb={1} bg="$blueGray800" />
           <Block
-            row
             justifyContent="space-between"
             style={{
               marginBottom: sizes.s,
+              flexDirection: locale === "ar" ? "row-reverse" : "row",
             }}
           >
-            <Text>Earnings</Text>
+            <Text>t{t("earnings")}</Text>
             <Text bold>{formatNumberWithSuffix(props?.data?.earnings)}</Text>
           </Block>
         </Block>
@@ -138,7 +139,7 @@ const EarningsRevenue = (props) => {
           isFocusVisible={false}
           onPress={toggleView}
         >
-          <ButtonText>Data</ButtonText>
+          <ButtonText>{t("data")}</ButtonText>
         </Button>
       </View>
     </>

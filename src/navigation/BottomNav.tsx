@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { useTheme } from "../hooks";
+import { useTheme, useTranslation } from "../hooks";
 
 import React from "react";
 import WatchList from "../screens/WatchList";
@@ -15,14 +15,15 @@ const Tab = createBottomTabNavigator();
 
 export default function BottomNav() {
   const { assets, colors, fonts, gradients, sizes } = useTheme();
+  const { locale, t } = useTranslation();
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Dashboard"
+        name={t("dashboard")}
         component={Dashboard}
         options={{
           headerShown: false,
-          headerTitle: "Dashboard",
+          headerTitle: t("dashboard"),
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
@@ -33,7 +34,7 @@ export default function BottomNav() {
         }}
       />
       <Tab.Screen
-        name="Markets"
+        name={t("markets")}
         component={Markets}
         options={{
           headerShown: false,
@@ -47,7 +48,7 @@ export default function BottomNav() {
         }}
       />
       <Tab.Screen
-        name="Discover"
+        name={t("discover")}
         component={Discover}
         options={{
           headerShown: false,
@@ -61,7 +62,7 @@ export default function BottomNav() {
         }}
       />
       <Tab.Screen
-        name="WatchList"
+        name={t("watchlist")}
         component={WatchList}
         options={{
           headerShown: false,
@@ -76,7 +77,7 @@ export default function BottomNav() {
         }}
       />
       <Tab.Screen
-        name="Portfolios"
+        name={t("portfolios")}
         component={Portfolios}
         options={{
           headerShown: false,
@@ -90,7 +91,7 @@ export default function BottomNav() {
         }}
       />
       <Tab.Screen
-        name="Screener"
+        name={t("screener")}
         component={Screener}
         options={{
           headerShown: false,

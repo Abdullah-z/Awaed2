@@ -21,7 +21,7 @@ export default function Sparkline(props) {
 
   const dataSource = {
     type: "sparkline",
-    width: 70,
+    width: 80,
     height: 60,
     dataFormat: "JSON",
     dataSource: {

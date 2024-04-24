@@ -1,13 +1,14 @@
-import React from 'react';
-import {Platform, StyleSheet, Text, TextStyle} from 'react-native';
-import {LinearGradient} from 'expo-linear-gradient';
+import React from "react";
+import { Platform, StyleSheet, Text, TextStyle } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-import useTheme from '../hooks/useTheme';
-import {ITextProps} from '../constants/types';
+import useTheme from "../hooks/useTheme";
+import { ITextProps } from "../constants/types";
+import { useTranslation } from "../hooks";
 
 const Typography = (props: ITextProps) => {
   const {
-    id = 'Text',
+    id = "Text",
     children,
     style,
     center,
@@ -60,28 +61,28 @@ const Typography = (props: ITextProps) => {
     paddingLeft,
     ...rest
   } = props;
-  const {colors, sizes, lines, weights, fonts} = useTheme();
-
+  const { colors, sizes, lines, weights, fonts } = useTheme();
+  const { locale } = useTranslation();
   const colorIndex = primary
-    ? 'primary'
+    ? "primary"
     : secondary
-    ? 'secondary'
+    ? "secondary"
     : tertiary
-    ? 'tertiary'
+    ? "tertiary"
     : black
-    ? 'black'
+    ? "black"
     : white
-    ? 'white'
+    ? "white"
     : gray
-    ? 'gray'
+    ? "gray"
     : danger
-    ? 'danger'
+    ? "danger"
     : warning
-    ? 'warning'
+    ? "warning"
     : success
-    ? 'success'
+    ? "success"
     : info
-    ? 'info'
+    ? "info"
     : null;
   const textColor = color
     ? color
@@ -97,7 +98,8 @@ const Typography = (props: ITextProps) => {
       lineHeight: lines.text,
       fontWeight: weights.text,
       fontFamily: fonts.text,
-      ...(textColor && {color: textColor}),
+      textAlign: locale === "ar" ? "right" : "left",
+      ...(textColor && { color: textColor }),
       ...(h1 && {
         fontSize: sizes.h1,
         lineHeight: lines.h1,
@@ -134,34 +136,34 @@ const Typography = (props: ITextProps) => {
         fontWeight: weights.p,
         fontFamily: fonts.p,
       }),
-      ...(marginBottom && {marginBottom}),
-      ...(marginTop && {marginTop}),
-      ...(marginHorizontal && {marginHorizontal}),
-      ...(marginVertical && {marginVertical}),
-      ...(marginRight && {marginRight}),
-      ...(marginLeft && {marginLeft}),
-      ...(paddingBottom && {paddingBottom}),
-      ...(paddingTop && {paddingTop}),
-      ...(paddingHorizontal && {paddingHorizontal}),
-      ...(paddingVertical && {paddingVertical}),
-      ...(paddingRight && {paddingRight}),
-      ...(paddingLeft && {paddingLeft}),
-      ...(center && {textAlign: 'center'}),
-      ...(align && {textAlign: align}),
-      ...(bold && {fontFamily: fonts.bold}),
-      ...(semibold && {fontFamily: fonts.semibold}),
-      ...(weight && {fontWeight: weight}),
-      ...(transform && {textTransform: transform}),
-      ...(font && {fontFamily: font}),
-      ...(size && {fontSize: size}),
-      ...(color && {color}),
-      ...(opacity && {opacity}),
-      ...(lineHeight && {lineHeight}),
-      ...(position && {position}),
-      ...(right !== undefined && {right}),
-      ...(left !== undefined && {left}),
-      ...(top !== undefined && {top}),
-      ...(bottom !== undefined && {bottom}),
+      ...(marginBottom && { marginBottom }),
+      ...(marginTop && { marginTop }),
+      ...(marginHorizontal && { marginHorizontal }),
+      ...(marginVertical && { marginVertical }),
+      ...(marginRight && { marginRight }),
+      ...(marginLeft && { marginLeft }),
+      ...(paddingBottom && { paddingBottom }),
+      ...(paddingTop && { paddingTop }),
+      ...(paddingHorizontal && { paddingHorizontal }),
+      ...(paddingVertical && { paddingVertical }),
+      ...(paddingRight && { paddingRight }),
+      ...(paddingLeft && { paddingLeft }),
+      ...(center && { textAlign: "center" }),
+      ...(align && { textAlign: align }),
+      ...(bold && { fontFamily: fonts.bold }),
+      ...(semibold && { fontFamily: fonts.semibold }),
+      ...(weight && { fontWeight: weight }),
+      ...(transform && { textTransform: transform }),
+      ...(font && { fontFamily: font }),
+      ...(size && { fontSize: size }),
+      ...(color && { color }),
+      ...(opacity && { opacity }),
+      ...(lineHeight && { lineHeight }),
+      ...(position && { position }),
+      ...(right !== undefined && { right }),
+      ...(left !== undefined && { left }),
+      ...(top !== undefined && { top }),
+      ...(bottom !== undefined && { bottom }),
     },
   ]) as TextStyle;
 
@@ -175,12 +177,12 @@ const Typography = (props: ITextProps) => {
       textStyles?.marginVertical ||
         textStyles?.marginTop ||
         textStyles?.marginBottom ||
-        0,
+        0
     );
 
   // generate component testID or accessibilityLabel based on Platform.OS
   const textID =
-    Platform.OS === 'android' ? {accessibilityLabel: id} : {testID: id};
+    Platform.OS === "android" ? { accessibilityLabel: id } : { testID: id };
 
   // if (gradient) {
   //   return (

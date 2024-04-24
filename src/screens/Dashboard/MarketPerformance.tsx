@@ -1,7 +1,7 @@
-import {View} from 'react-native';
-import React, {useState} from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
-import {Block, Text} from '../../components';
+import { View } from "react-native";
+import React, { useState } from "react";
+import { ScrollView } from "react-native-gesture-handler";
+import { Block, Text } from "../../components";
 import {
   Button,
   ButtonIcon,
@@ -18,21 +18,21 @@ import {
   SelectInput,
   SelectItem,
   SelectPortal,
-} from '@gluestack-ui/themed';
-import {SelectTrigger} from '@gluestack-ui/themed';
-import {useTheme} from '../../hooks';
-import TWGainers from '../../components/Dashboard/TWGainers';
-import TWIndustries from '../../components/Dashboard/TWIndustries';
-import TWInternational from '../../components/Dashboard/TWInternational';
-import MostActives from '../../components/Dashboard/MostActives';
+} from "@gluestack-ui/themed";
+import { SelectTrigger } from "@gluestack-ui/themed";
+import { useTheme } from "../../hooks";
+import TWGainers from "../../components/Dashboard/TWGainers";
+import TWIndustries from "../../components/Dashboard/TWIndustries";
+import TWInternational from "../../components/Dashboard/TWInternational";
+import MostActives from "../../components/Dashboard/MostActives";
 
 export default function MarketPerformance() {
-  const {sizes, colors, gradients, assets} = useTheme();
+  const { sizes, colors, gradients, assets } = useTheme();
 
   return (
     <ScrollView>
       <Block margin={sizes.sm}>
-        <Select>
+        {/* <Select>
           <SelectTrigger variant="outline" size="md">
             <SelectInput
               color={colors.text}
@@ -57,9 +57,9 @@ export default function MarketPerformance() {
               <SelectItem label="Japan" value="4" />
             </SelectContent>
           </SelectPortal>
-        </Select>
+        </Select> */}
         <TWGainers />
-        <MostActives />
+        {/* <MostActives /> */}
         {/* <TWIndustries />
         <TWInternational /> */}
       </Block>

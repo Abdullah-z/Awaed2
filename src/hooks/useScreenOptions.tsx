@@ -18,12 +18,15 @@ import Button from "../components/Button";
 import Block from "../components/Block";
 import { Test } from "../screens/Search";
 import { Avatar, AvatarFallbackText } from "@gluestack-ui/themed";
+import { Pressable } from "react-native";
 
 export default () => {
   const { t } = useTranslation();
   const { user } = useData();
   const navigation = useNavigation();
   const { icons, colors, gradients, sizes } = useTheme();
+  const { locale, setLocale } = useTranslation();
+  console.log("loacle:", locale);
 
   const menu = {
     headerStyle: { elevation: 0, backgroundColor: colors.background },
@@ -52,6 +55,13 @@ export default () => {
     // ),
     headerRight: () => (
       <Block row flex={0} align="center" marginRight={sizes.padding}>
+        <Pressable
+          onPress={() => (locale === "ar" ? setLocale("en") : setLocale("ar"))}
+        >
+          <Text marginRight={sizes.sm} white>
+            {locale === "ar" ? "English" : "Arabic"}
+          </Text>
+        </Pressable>
         <TouchableOpacity style={{ marginRight: sizes.sm }}>
           <Avatar bgColor="$amber600" size="md" borderRadius="$full">
             <AvatarFallbackText>Sandeep Srivastava</AvatarFallbackText>

@@ -1,7 +1,7 @@
 import { View, ScrollView, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { Block, Text } from "../../components";
-import { useData, useTheme } from "../../hooks";
+import { useData, useTheme, useTranslation } from "../../hooks";
 import {
   AddIcon,
   Avatar,
@@ -46,6 +46,7 @@ export default function Overview(props) {
   const [showModal2, setShowModal2] = useState(false);
   const ref = React.useRef(null);
   const [modalData, setModalData] = useState();
+  const { locale, t } = useTranslation();
 
   const ModalDate = new Date(modalData?.PublishedDate);
   // Format the date as "Month Day" (e.g., "Oct 23")
@@ -130,7 +131,10 @@ export default function Overview(props) {
     <ScrollView>
       <Block margin={sizes.s}>
         <Block>
-          <Block row marginVertical={sizes.s}>
+          <Block
+            style={{ flexDirection: locale === "ar" ? "row-reverse" : "row" }}
+            marginVertical={sizes.s}
+          >
             <Image
               style={{ width: 60, height: 60 }}
               source={{
@@ -138,9 +142,17 @@ export default function Overview(props) {
               }}
             />
             <Block marginLeft={sizes.s}>
-              <Text h4>{props?.data?.companyInformation?.name}</Text>
+              <Text h4>
+                {locale === "ar"
+                  ? props?.data?.companyInformation?.nameSec
+                  : props?.data?.companyInformation?.name}
+              </Text>
 
-              <Block row>
+              <Block
+                style={{
+                  flexDirection: locale === "ar" ? "row-reverse" : "row",
+                }}
+              >
                 <Text gray>{props?.data?.companyInformation?.exchange}:</Text>
                 <Text gray>{props?.data?.companyInformation?.symbol}</Text>
               </Block>
@@ -176,21 +188,21 @@ export default function Overview(props) {
                   (item) =>
                     item.symb === props?.data?.companyInformation?.symbol
                 )
-                  ? "Remove from Portfolio"
-                  : "Add to Portfolio"}
+                  ? t("removePortfolio")
+                  : t("addPortfolio")}
               </ButtonText>
             </Button>
           </Block>
           <Block row>
             <View style={{ width: "25%" }}>
-              <Text gray>LAST PRICE</Text>
+              <Text gray>{t("LASTPRICE")}</Text>
               <Text bold>
                 {props?.data?.companyInformation?.currency}{" "}
                 {props?.data?.keyInformation?.lastPrice}
               </Text>
             </View>
             <View style={{ width: "25%" }}>
-              <Text gray>MARKET CAP</Text>
+              <Text gray>{t("MARKETCAP")}</Text>
               <Text bold>
                 {props?.data?.companyInformation?.currency}{" "}
                 {formatNumberWithSuffix(
@@ -216,11 +228,11 @@ export default function Overview(props) {
 
           <Block row>
             <View style={{ width: "25%" }}>
-              <Text gray>UPDATED</Text>
+              <Text gray>{t("UPDATED")}</Text>
               <Text bold>-DATA-</Text>
             </View>
             <View style={{ width: "25%" }}>
-              <Text gray>DATA</Text>
+              <Text gray>{t("DATA")}</Text>
               <Text bold>-DATA-</Text>
             </View>
           </Block>
@@ -228,21 +240,25 @@ export default function Overview(props) {
         <Block marginTop={sizes.sm}>
           <Block>
             <Text marginBottom={sizes.s} h5 white>
-              {props?.data?.companyInformation?.symbol} Stock Overview
+              {props?.data?.companyInformation?.symbol} {t("stockOverview")}
             </Text>
             <Block tertiary radius={sizes.sm} padding={sizes.sm}>
               <Text>
-                {props?.data?.companyInformation?.description &&
-                  props?.data?.companyInformation?.description
-                    .split(".")
-                    .slice(0, 2)
-                    .join(".")}
+                {props?.data?.companyInformation?.description && locale === "ar"
+                  ? props?.data?.companyInformation?.descriptionSec
+                      .split(".")
+                      .slice(0, 2)
+                      .join(".")
+                  : props?.data?.companyInformation?.description
+                      .split(".")
+                      .slice(0, 2)
+                      .join(".")}
               </Text>
             </Block>
           </Block>
           <Block justify="center">
             <Radar bgcolor={colors.tertiary} />
-            <Text white>Snowflake Analysis</Text>
+            <Text white>{t("snowflakeAnalysis")}</Text>
             <Text gray>
               Exceptional growth potential with outstanding track record
             </Text>
@@ -256,7 +272,7 @@ export default function Overview(props) {
         >
           <Block marginTop={sizes.s}>
             <Text p gray>
-              REWARDS
+              {t("REWARDS")}
             </Text>
             <Block row align="center">
               <Ionicons
@@ -297,7 +313,7 @@ export default function Overview(props) {
           </Block>
           <Block marginTop={sizes.s}>
             <Text p gray>
-              RISK ANALYSIS
+              {t("RISKANALYSIS")}
             </Text>
             <Block row align="center">
               <Ionicons
@@ -332,7 +348,7 @@ export default function Overview(props) {
               isDisabled={false}
               isFocusVisible={false}
             >
-              <ButtonText color="#2394DF">See All Risks Checks</ButtonText>
+              <ButtonText color="#2394DF">{t("seeAllRisksChecks")}</ButtonText>
             </Button>
           </Block>
         </Block>
@@ -343,10 +359,12 @@ export default function Overview(props) {
           radius={sizes.sm}
           marginTop={sizes.sm}
         >
-          <Block row>
+          <Block
+            style={{ flexDirection: locale === "ar" ? "row-reverse" : "row" }}
+          >
             <Block>
               <Text white h5>
-                Narratives
+                {t("narratives")}
               </Text>
             </Block>
             <Block>
@@ -359,13 +377,13 @@ export default function Overview(props) {
                 isDisabled={false}
                 isFocusVisible={false}
               >
-                <ButtonText color="#2394DF">Create narrative </ButtonText>
+                <ButtonText color="#2394DF">{t("createNarrative")}</ButtonText>
                 <ButtonIcon color="#2394DF" as={AddIcon} />
               </Button>
             </Block>
           </Block>
           <Text>
-            Narratives bring a range of perspectives from our community.
+            {t("narrativesBringRangeOfPerspectivesFromOurCommunity")}.
           </Text>
           <Divider marginTop={sizes.sm} bgColor="$blueGray500"></Divider>
           <Block marginVertical={sizes.sm} row>
@@ -379,7 +397,7 @@ export default function Overview(props) {
             </Avatar>
             <Block marginLeft={sizes.s} justify="center">
               <Text semibold>Person Name</Text>
-              <Text gray>Equity Analyst</Text>
+              <Text gray>{t("equityAnalyst")}</Text>
             </Block>
           </Block>
 
@@ -405,7 +423,7 @@ export default function Overview(props) {
             isDisabled={false}
             isFocusVisible={false}
           >
-            <ButtonText color="#2394DF">View Narrative</ButtonText>
+            <ButtonText color="#2394DF">{t("viewNarrative")}</ButtonText>
           </Button>
         </Block>
         <Block
@@ -415,20 +433,23 @@ export default function Overview(props) {
           radius={sizes.sm}
         >
           <Text white marginVertical={sizes.s} h5>
-            {props?.data?.companyInformation?.name} Competitors
+            {locale === "ar"
+              ? props?.data?.companyInformation?.nameSec
+              : props?.data?.companyInformation?.name}{" "}
+            {t("competitors")}
           </Text>
           <Block>
             <ScrollView style={{ marginTop: sizes.s }} horizontal>
-              <Block width={300} marginHorizontal={sizes.s}>
+              <Block width={250} marginHorizontal={sizes.s}>
                 <Radar bgcolor={colors.tertiary} />
               </Block>
-              <Block width={300} marginHorizontal={sizes.s}>
+              <Block width={250} marginHorizontal={sizes.s}>
                 <Radar bgcolor={colors.tertiary} />
               </Block>
-              <Block width={300} marginHorizontal={sizes.s}>
+              <Block width={250} marginHorizontal={sizes.s}>
                 <Radar bgcolor={colors.tertiary} />
               </Block>
-              <Block width={300} marginHorizontal={sizes.s}>
+              <Block width={250} marginHorizontal={sizes.s}>
                 <Radar bgcolor={colors.tertiary} />
               </Block>
             </ScrollView>
@@ -436,7 +457,7 @@ export default function Overview(props) {
         </Block>
         <Block radius={sizes.sm} marginTop={sizes.sm} tertiary>
           <Text padding={sizes.sm} white h5>
-            Price & History Performance
+            {t("priceHistoryPerformance")}
           </Text>
           <Block>
             <PriceHistoryPerformance
@@ -445,7 +466,7 @@ export default function Overview(props) {
           </Block>
           <Block marginVertical={sizes.s}>
             <Text h5 semibold>
-              Recent News & Update
+              {t("recentNewsUpdate")}
             </Text>
             {/* <Block marginTop={sizes.s}>
               <Block row align="center">
@@ -705,7 +726,7 @@ export default function Overview(props) {
 
           <Block>
             <Text marginBottom={sizes.s} h5 bold hite>
-              Shareholder Returns
+              {t("shareholderReturns")}
             </Text>
 
             <Block
@@ -785,7 +806,7 @@ export default function Overview(props) {
               isFocusVisible={false}
             >
               <ButtonText color="#2394DF">
-                See full shareholder returns
+                {t("seeFullShareholderReturns")}
               </ButtonText>
             </Button>
 
@@ -808,7 +829,7 @@ export default function Overview(props) {
 
             <Block marginTop={sizes.sm}>
               <Text marginBottom={sizes.s} h5 bold gray>
-                Price Volatility
+                {t("priceVolatility")}
               </Text>
               <PriceVolatility />
               <Block>
@@ -838,20 +859,24 @@ export default function Overview(props) {
           radius={sizes.sm}
         >
           <Text white marginBottom={sizes.s} h5>
-            About the Company
+            {t("aboutTheCompany")}
           </Text>
           <Block row>
             <Block>
-              <Text gray>CEO</Text>
-              <Text bold>{props?.data?.companyInformation?.ceo}</Text>
+              <Text gray>{t("CEO")}</Text>
+              <Text bold>
+                {locale === "ar"
+                  ? props?.data?.companyInformation?.ceoSec
+                  : props?.data?.companyInformation?.ceo}
+              </Text>
             </Block>
             <Block>
-              <Text gray>Employees</Text>
+              <Text gray>{t("employees")}</Text>
               <Text bold>{props?.data?.companyInformation?.employees}</Text>
             </Block>
           </Block>
           <Block marginVertical={sizes.s}>
-            <Text gray>Website:</Text>
+            <Text gray>{t("website")}:</Text>
             <Text bold info>
               {props?.data?.companyInformation?.website}
             </Text>
@@ -864,45 +889,52 @@ export default function Overview(props) {
               bg: colors.gray,
             }}
           />
-          <Text>{props?.data?.companyInformation?.description}</Text>
+          <Text>
+            {locale === "ar"
+              ? props?.data?.companyInformation?.descriptionSec
+              : props?.data?.companyInformation?.description}
+          </Text>
         </Block>
 
         <Block tertiary radius={15}>
           <Text h5 white margin={sizes.sm}>
-            {props?.data?.companyInformation?.name} Fundamentals Summary
+            {locale === "ar"
+              ? props?.data?.companyInformation?.nameSec
+              : props?.data?.companyInformation?.name}{" "}
+            {t("fundamentalsSummary")}
           </Text>
           <FundamentalSummary data={props?.data?.fundamentalSummary} />
         </Block>
 
         <Block tertiary radius={15} marginVertical={sizes.s}>
           <Text h5 white margin={sizes.sm}>
-            Earnings & Revenue
+            {t("earningsRevenue")}
           </Text>
           <EarningsRevenue data={props?.data?.earningsAndRevenue} />
           <Divider mb={1} bg="$blueGray800" />
 
           <Block marginHorizontal={sizes.s}>
             <Block
-              row
               justifyContent="space-between"
               style={{
                 marginVertical: sizes.s,
+                flexDirection: locale === "ar" ? "row-reverse" : "row",
               }}
             >
-              <Text gray>Earnings per share (EPS)</Text>
+              <Text gray>{t("earningsPerShare")} (EPS)</Text>
               <Text bold>
                 {NumberWithCommas(props?.data?.earningsAndRevenue?.eps)}
               </Text>
             </Block>
             <Divider mb={1} bg="$blueGray800" />
             <Block
-              row
               justifyContent="space-between"
               style={{
                 marginBottom: sizes.s,
+                flexDirection: locale === "ar" ? "row-reverse" : "row",
               }}
             >
-              <Text gray>Gross Margin</Text>
+              <Text gray>{t("grossMargin")}</Text>
               <Text bold>
                 {NumberWithCommas(props?.data?.earningsAndRevenue?.grossMargin)}
                 %
@@ -910,13 +942,13 @@ export default function Overview(props) {
             </Block>
             <Divider mb={1} bg="$blueGray800" />
             <Block
-              row
               justifyContent="space-between"
               style={{
                 marginBottom: sizes.s,
+                flexDirection: locale === "ar" ? "row-reverse" : "row",
               }}
             >
-              <Text gray>Net Profit Margin</Text>
+              <Text gray>{t("netProfitMargin")}</Text>
               <Text bold>
                 {NumberWithCommas(
                   props?.data?.earningsAndRevenue?.netProfitMargin
@@ -926,13 +958,13 @@ export default function Overview(props) {
             </Block>
             <Divider mb={1} bg="$blueGray800" />
             <Block
-              row
               justifyContent="space-between"
               style={{
                 marginBottom: sizes.s,
+                flexDirection: locale === "ar" ? "row-reverse" : "row",
               }}
             >
-              <Text gray>Debt/Equity Ratio</Text>
+              <Text gray>{t("debtEquityRatio")}</Text>
               <Text bold>
                 {NumberWithCommas(
                   props?.data?.earningsAndRevenue?.debtEquityRatio
@@ -944,7 +976,7 @@ export default function Overview(props) {
         </Block>
         <Block tertiary radius={15} marginVertical={sizes.s}>
           <Text h5 white margin={sizes.sm}>
-            Dividends
+            {t("dividends")}
           </Text>
           <Block row marginBottom={sizes.s}>
             <Block>
@@ -955,7 +987,7 @@ export default function Overview(props) {
                 %
               </Text>
               <Text center gray>
-                Current Dividend Yield
+                {t("currentDividendYield")}
               </Text>
             </Block>
             <Block>
@@ -966,7 +998,7 @@ export default function Overview(props) {
                 %
               </Text>
               <Text center gray>
-                Payout Ratio
+                {t("payoutRatio")}
               </Text>
             </Block>
           </Block>

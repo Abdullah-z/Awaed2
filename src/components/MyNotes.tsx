@@ -13,7 +13,7 @@ import {
 import { ButtonText } from "@gluestack-ui/themed";
 import { ButtonIcon } from "@gluestack-ui/themed";
 import { AddIcon } from "@gluestack-ui/themed";
-import { useTheme } from "../hooks";
+import { useTheme, useTranslation } from "../hooks";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modal } from "@gluestack-ui/themed";
 import { ModalContent } from "@gluestack-ui/themed";
@@ -42,6 +42,8 @@ export default function MyNotes() {
   const [editedNoteContent, setEditedNoteContent] = useState("");
 
   const [notes, setNotes] = useState([]);
+
+  const { locale, t } = useTranslation();
 
   const handleEditNote = () => {
     const updatedNotes = [...notes];
@@ -207,7 +209,7 @@ export default function MyNotes() {
       </Modal>
       <Block padding={sizes.sm} radius={sizes.sm} tertiary marginTop={sizes.sm}>
         <Text white h5 marginBottom={sizes.s}>
-          My Notes
+          {t("myNotes")}
         </Text>
 
         {notes.map((item, index) => (
@@ -215,7 +217,9 @@ export default function MyNotes() {
             <Text>{item.content}</Text>
             <Block row marginTop={sizes.l}>
               <Block>
-                <Text gray>Created at {item.createdAt}</Text>
+                <Text gray>
+                  {t("createdAt")} {item.createdAt}
+                </Text>
               </Block>
               <Block align="flex-end">
                 <Menu
@@ -234,11 +238,11 @@ export default function MyNotes() {
                     }}
                   >
                     <Icon as={EditIcon} size="sm" mr="$2" />
-                    <MenuItemLabel size="sm">Edit</MenuItemLabel>
+                    <MenuItemLabel size="sm">{t("edit")}</MenuItemLabel>
                   </MenuItem>
                   <MenuItem onPress={() => handleDeleteNote(index)}>
                     <Icon as={TrashIcon} size="sm" mr="$2" />
-                    <MenuItemLabel size="sm">Delete</MenuItemLabel>
+                    <MenuItemLabel size="sm">{t("delete")}</MenuItemLabel>
                   </MenuItem>
                 </Menu>
               </Block>
@@ -256,7 +260,7 @@ export default function MyNotes() {
           isDisabled={false}
           isFocusVisible={false}
         >
-          <ButtonText color="#2394DF">Add note </ButtonText>
+          <ButtonText color="#2394DF">{t("addNote")} </ButtonText>
           <ButtonIcon color="#2394DF" as={AddIcon} />
         </Button>
       </Block>

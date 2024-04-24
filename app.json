@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "rn-soft-ui-kit-free",
-    "slug": "rn-soft-ui-kit-free",
-    "description": "React Native - Soft UI Kit - Free",
+    "name": "Awaed Saudi",
+    "slug": "awaed-saudi",
+    "description": "",
     "primaryColor": "#CB0C9F",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,7 +17,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.awaedsaudi.app"
     },
     "android": {
       "package": "com.awaed.app",
@@ -29,6 +30,12 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-localization"]
+    "plugins": ["expo-localization"],
+    "extra": {
+      "eas": {
+        "projectId": "bfc2f495-067f-4013-9202-a3f36b1358e8"
+      }
+    },
+    "owner": "abdullah95"
   }
 }

@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { Block, Text } from "../components";
-import { useData, useTheme } from "../hooks";
+import { useData, useTheme, useTranslation } from "../hooks";
 import { ScrollView } from "react-native-gesture-handler";
 import WatchlistCard from "../components/WatchlistCard";
 import CommonDataService from "../services/common-data-service";
@@ -20,43 +20,43 @@ export default function WatchList() {
   const [portfolioData, setPortfolioData] = useState();
   const searchRef = useRef(null); // Create a ref for the Search component
   const [search, setSearch] = useState(false);
+  const { locale, t } = useTranslation();
 
   function extractSymbols(data) {
     return data.map((item) => item.symb);
   }
 
   const getWatchlistData = async () => {
-    setLoading(true);
+    setLoading(false);
     await commonDataService
       .executeApiCall(SERVICE_ROUTE.GET_WATCHLIST_DATA, {
         symbols: extractSymbols(portfolio),
       })
       .then(async (res) => {
-        setLoading(false);
+        //setLoading(true);
         console.log("wtlst:", res.data);
         setPortfolioData(res.data);
-        // Assuming data property holds response content
       })
       .catch((error) => {
         setLoading(false);
         console.log(
           "key info error:",
           error.response ? error.response.data : error
-        ); // Log specific error data if available
+        );
       });
   };
 
   useEffect(() => {
-    portfolio ? getWatchlistData() : "";
+    portfolio.length > 0 ? getWatchlistData() : "";
   }, [portfolio]);
 
   return (
     <>
       <ScrollView>
         <Block margin={sizes.s}>
-          <Text h4>Watchlist</Text>
+          <Text h4>{t("watchlist")}</Text>
           {search ? (
-            <Search placeholder={"Add Company"} focus={true} nav={false} />
+            <Search placeholder={t("addCompany")} focus={true} nav={false} />
           ) : (
             <></>
           )}

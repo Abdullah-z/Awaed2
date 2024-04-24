@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import React, { useState } from "react";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
-import { useTheme } from "../../hooks";
+import { useTheme, useTranslation } from "../../hooks";
 import Block from "../Block";
 import { Pressable } from "react-native";
 import Text from "../Text";
@@ -15,6 +15,7 @@ export default function FundamentalSummary(props) {
   const [showData, setShowData] = useState(false);
   console.log(props?.data);
   const { colors, sizes } = useTheme();
+  const { t, locale } = useTranslation();
   const dataSource = {
     type: "doughnut2d",
     width: "100%",
@@ -29,7 +30,7 @@ export default function FundamentalSummary(props) {
         // subcaption: "For all users in 2023",
         showpercentvalues: "0",
         defaultcenterlabel:
-          "Market Cap " + formatNumberWithSuffix(props?.data?.marketCapital),
+          t("marketCap") + formatNumberWithSuffix(props?.data?.marketCapital),
         aligncaptionwithcanvas: "0",
         captionpadding: "0",
         labelFontColor: "#ffffff",
@@ -46,17 +47,17 @@ export default function FundamentalSummary(props) {
       },
       data: [
         {
-          label: "Market Cap",
+          label: t("marketCap"),
           value: props?.data?.marketCapital,
           color: "#3E4855",
         },
         {
-          label: "Earnings",
+          label: t("earnings"),
           value: props?.data?.earnings,
           color: "#71E7D6",
         },
         {
-          label: "Earnings",
+          label: t("revenue"),
           value: props?.data?.revenue,
           color: "#2394DF",
         },
@@ -141,7 +142,7 @@ export default function FundamentalSummary(props) {
         <Block marginHorizontal={sizes.xs} marginTop={sizes.s}>
           <Block>
             <Text marginVertical={sizes.s} gray>
-              Key Statistics
+              {t("keyStatistics")}
             </Text>
             <Divider mb={1} bg="$blueGray800" />
             <Block
@@ -151,7 +152,7 @@ export default function FundamentalSummary(props) {
                 marginBottom: sizes.s,
               }}
             >
-              <Text>Price to Earnings Ratio</Text>
+              <Text>{t("priceEarningsRatio")}</Text>
               <Text bold>
                 {NumberWithCommas(props.data.priceToEarningsRatio)}x
               </Text>
@@ -165,7 +166,7 @@ export default function FundamentalSummary(props) {
                 marginBottom: sizes.s,
               }}
             >
-              <Text>Price to Sales Ratio</Text>
+              <Text>{t("priceSalesRatio")}</Text>
               <Text bold>
                 {NumberWithCommas(props.data.priceToSalesRatio)}x
               </Text>
@@ -179,7 +180,7 @@ export default function FundamentalSummary(props) {
                 marginBottom: sizes.s,
               }}
             >
-              <Text>Price to Book Ratio</Text>
+              <Text>{t("priceBookRatio")}</Text>
               <Text bold>{NumberWithCommas(props.data.priceToBookRatio)}x</Text>
             </Block>
             <Divider mb={1} bg="$blueGray800" />
@@ -191,7 +192,7 @@ export default function FundamentalSummary(props) {
                 marginBottom: sizes.s,
               }}
             >
-              <Text>Enterprise Value/EBITDA</Text>
+              <Text>{t("enterpriseValue")}</Text>
               <Text bold>
                 {NumberWithCommas(props.data.enterpriseValueOverEBITDA)}x
               </Text>
@@ -205,7 +206,7 @@ export default function FundamentalSummary(props) {
                 marginBottom: sizes.s,
               }}
             >
-              <Text>PEG Ratio</Text>
+              <Text>{t("PEGRatio")}</Text>
               <Text bold>{NumberWithCommas(props.data.pegRatio)}x</Text>
             </Block>
             <Divider mb={1} bg="$blueGray800" />
@@ -222,7 +223,7 @@ export default function FundamentalSummary(props) {
                 {NumberWithCommas(props?.data?.priceToEarningRatio)}x
               </Text>
               <Text center gray>
-                P/E Ratio
+                {t("P/ERatio")}
               </Text>
             </Block>
             <Block>
@@ -230,7 +231,7 @@ export default function FundamentalSummary(props) {
                 {NumberWithCommas(props?.data?.priceToSalesRatio)}x
               </Text>
               <Text center gray>
-                P/S Ratio
+                {t("P/SRatio")}
               </Text>
             </Block>
           </View>
@@ -239,37 +240,37 @@ export default function FundamentalSummary(props) {
         <>
           <Block marginHorizontal={sizes.s}>
             <Block
-              row
               justifyContent="space-between"
               style={{
                 marginVertical: sizes.s,
+                flexDirection: locale === "ar" ? "row-reverse" : "row",
               }}
             >
-              <Text>Market cap</Text>
+              <Text>{t("marketCap")}</Text>
               <Text bold>
                 {formatNumberWithSuffix(props?.data?.marketCapital)}
               </Text>
             </Block>
             <Divider mb={1} bg="$blueGray800" />
             <Block
-              row
               justifyContent="space-between"
               style={{
                 marginBottom: sizes.s,
+                flexDirection: locale === "ar" ? "row-reverse" : "row",
               }}
             >
-              <Text>Earnings</Text>
+              <Text>{t("earnings")}</Text>
               <Text bold>{formatNumberWithSuffix(props?.data?.earnings)}</Text>
             </Block>
             <Divider mb={1} bg="$blueGray800" />
             <Block
-              row
               justifyContent="space-between"
               style={{
                 marginBottom: sizes.s,
+                flexDirection: locale === "ar" ? "row-reverse" : "row",
               }}
             >
-              <Text>Market Cap</Text>
+              <Text>{t("marketCap")}</Text>
               <Text bold>{formatNumberWithSuffix(props?.data?.revenue)}</Text>
             </Block>
           </Block>
@@ -286,7 +287,7 @@ export default function FundamentalSummary(props) {
           isFocusVisible={false}
           onPress={toggleView}
         >
-          <ButtonText>Data</ButtonText>
+          <ButtonText>{t("data")}</ButtonText>
         </Button>
       </View>
     </View>

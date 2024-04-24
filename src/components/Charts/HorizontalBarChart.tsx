@@ -1,13 +1,14 @@
 import React from "react";
 import { Text, View } from "react-native";
 import ReactNativeFusionCharts from "react-native-fusioncharts";
-import { useTheme } from "../../hooks";
+import { useTheme, useTranslation } from "../../hooks";
 
 const HorizontalBarChart = () => {
   const { colors, sizes } = useTheme();
+  const { t, locale } = useTranslation();
   const chartData = [
-    { label: "Current Price", value: "250" },
-    { label: "Fair Value", value: "170" },
+    { label: t("currentPrice"), value: "250" },
+    { label: t("fairValue"), value: "170" },
     // { label: "Canada", value: "180" },
     // { label: "Iran", value: "140" },
     // { label: "Russia", value: "115" },

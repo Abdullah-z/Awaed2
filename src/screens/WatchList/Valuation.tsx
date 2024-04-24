@@ -1,6 +1,6 @@
 import { View, ScrollView } from "react-native";
-import React from "react";
-import { useTheme } from "../../hooks";
+import React, { useState } from "react";
+import { useTheme, useTranslation } from "../../hooks";
 import { Block, Text } from "../../components";
 import Radar from "../../components/Charts/Radar";
 import { Divider } from "@gluestack-ui/themed";
@@ -12,7 +12,7 @@ import AreaChart from "../../components/Charts/AreaChart";
 
 export default function Valuation(props) {
   const { colors, sizes } = useTheme();
-
+  const { t, locale } = useTranslation();
   return (
     <ScrollView>
       <Block margin={sizes.s}>
@@ -135,7 +135,7 @@ export default function Valuation(props) {
               }}
             />
             <Text marginLeft={sizes.s} white>
-              Price-To-Earnings vs Fair Ratio
+              {t("sharePricevsFairValue")}
             </Text>
           </Block>
           <Block row marginVertical={sizes.xs}>

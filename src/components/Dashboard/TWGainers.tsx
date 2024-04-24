@@ -1,37 +1,37 @@
-import {View, Pressable} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import Block from '../Block';
-import {Button, ButtonText, Divider} from '@gluestack-ui/themed';
-import Text from '../Text';
-import {useTheme} from '../../hooks';
-import {SERVICE_ROUTE} from '../../services/endpoints';
-import CommonDataService from '../../services/common-data-service';
-import {useNavigation} from '@react-navigation/core';
+import { View, Pressable } from "react-native";
+import React, { useState, useEffect } from "react";
+import Block from "../Block";
+import { Button, ButtonText, Divider } from "@gluestack-ui/themed";
+import Text from "../Text";
+import { useTheme } from "../../hooks";
+import { SERVICE_ROUTE } from "../../services/endpoints";
+import CommonDataService from "../../services/common-data-service";
+import { useNavigation } from "@react-navigation/core";
 
 export default function TWGainers() {
-  const {sizes, colors, gradients, assets} = useTheme();
+  const { sizes, colors, gradients, assets } = useTheme();
   const [selected, setSelected] = useState(1);
   const [selTime, setSelTime] = useState(1);
   const commonDataService = new CommonDataService();
   const [loading, setLoading] = useState(false);
   const [topGainersData, setTopGainersData] = useState();
   const [topLosersData, setTopLosersData] = useState();
+  const [activeData, setActiveData] = useState();
 
   const navigation = useNavigation();
 
-  console.log('tld' + JSON.stringify(topLosersData));
-
   const GetGainers = async () => {
-    console.log('get all gainers');
+    console.log("get all gainers");
     setLoading(true);
     await commonDataService.fetchData(SERVICE_ROUTE.GET_ALL_GAINERS).then(
       async (res) => {
         setTopGainersData(res?.data?.value);
+        console.log("TG", res?.data?.value);
       },
       (error) => {
         setLoading(false);
-        console.log('error' + error);
-      },
+        console.log("error" + error);
+      }
     );
   };
 
@@ -40,17 +40,33 @@ export default function TWGainers() {
     await commonDataService.fetchData(SERVICE_ROUTE.GET_ALL_LOSERS).then(
       async (res) => {
         setTopLosersData(res?.data?.value);
+        console.log("TL", res?.data?.value);
       },
       (error) => {
         setLoading(false);
-        console.log('error' + error);
+        console.log("error" + error);
+      }
+    );
+  };
+
+  const GetActives = async () => {
+    setLoading(true);
+    await commonDataService.fetchData(SERVICE_ROUTE.GET_MOST_ACTIVES).then(
+      async (res) => {
+        setActiveData(res?.data?.value);
+        console.log("MA", res?.data?.value);
       },
+      (error) => {
+        setLoading(false);
+        console.log("error" + error);
+      }
     );
   };
 
   useEffect(() => {
     GetGainers();
     GetLosers();
+    GetActives();
   }, []);
 
   return (
@@ -61,7 +77,8 @@ export default function TWGainers() {
           size="sm"
           variant="outline"
           action="secondary"
-          isDisabled={false}>
+          isDisabled={false}
+        >
           <ButtonText color={selected === 1 ? colors.white : colors.gray}>
             Top Gainers
           </ButtonText>
@@ -71,13 +88,25 @@ export default function TWGainers() {
           size="sm"
           variant="outline"
           action="secondary"
-          isDisabled={false}>
+          isDisabled={false}
+        >
           <ButtonText color={selected === 2 ? colors.white : colors.gray}>
             Top Losers
           </ButtonText>
         </Button>
+        <Button
+          onPress={() => setSelected(3)}
+          size="sm"
+          variant="outline"
+          action="secondary"
+          isDisabled={false}
+        >
+          <ButtonText color={selected === 3 ? colors.white : colors.gray}>
+            Most Actives
+          </ButtonText>
+        </Button>
       </Block>
-      <Block style={{borderColor: colors.gray, borderWidth: 1}}>
+      <Block style={{ borderColor: colors.gray, borderWidth: 1 }}>
         {/* <Block row marginTop={sizes.s} padding={sizes.s} justify="space-evenly">
           <Block
             paddingVertical={sizes.s}
@@ -160,7 +189,7 @@ export default function TWGainers() {
                     {index != 0 ? (
                       <Block align="center">
                         <Divider
-                          width={'90%'}
+                          width={"90%"}
                           marginVertical={sizes.xs}
                           variant="horizontal"
                           sx={{
@@ -173,13 +202,14 @@ export default function TWGainers() {
                     )}
 
                     <Block row padding={sizes.s}>
-                      <View style={{width: '70%', flexDirection: 'row'}}>
+                      <View style={{ width: "70%", flexDirection: "row" }}>
                         <Pressable
                           onPress={() =>
-                            navigation.navigate('DetailsPage', {
+                            navigation.navigate("DetailsPage", {
                               symb: item.Symbol,
                             })
-                          }>
+                          }
+                        >
                           <Text semibold info>
                             {item.Symbol}
                           </Text>
@@ -188,20 +218,21 @@ export default function TWGainers() {
                           {item.Name}
                         </Text>
                       </View>
-                      <View style={{width: '30%', alignItems: 'flex-end'}}>
-                        <Text success>{item.ChangesPercentage}</Text>
+                      <View style={{ width: "30%", alignItems: "flex-end" }}>
+                        <Text success>{item.ChangesPercentage}%</Text>
                       </View>
                     </Block>
                   </Block>
                 );
               })
-            : topLosersData?.map((item, index) => {
+            : selected === 2
+            ? topLosersData?.map((item, index) => {
                 return (
                   <Block>
                     {index != 0 ? (
                       <Block align="center">
                         <Divider
-                          width={'90%'}
+                          width={"90%"}
                           marginVertical={sizes.xs}
                           variant="horizontal"
                           sx={{
@@ -214,13 +245,14 @@ export default function TWGainers() {
                     )}
 
                     <Block row padding={sizes.s}>
-                      <View style={{width: '70%', flexDirection: 'row'}}>
+                      <View style={{ width: "70%", flexDirection: "row" }}>
                         <Pressable
                           onPress={() =>
-                            navigation.navigate('DetailsPage', {
+                            navigation.navigate("DetailsPage", {
                               symb: item.Symbol,
                             })
-                          }>
+                          }
+                        >
                           <Text semibold info>
                             {item.Symbol}
                           </Text>
@@ -229,8 +261,50 @@ export default function TWGainers() {
                           {item.Name}
                         </Text>
                       </View>
-                      <View style={{width: '30%', alignItems: 'flex-end'}}>
-                        <Text danger>{item.ChangesPercentage}</Text>
+                      <View style={{ width: "30%", alignItems: "flex-end" }}>
+                        <Text danger>{item.ChangesPercentage}%</Text>
+                      </View>
+                    </Block>
+                  </Block>
+                );
+              })
+            : activeData?.map((item, index) => {
+                return (
+                  <Block>
+                    {index != 0 ? (
+                      <Block align="center">
+                        <Divider
+                          width={"90%"}
+                          marginVertical={sizes.xs}
+                          variant="horizontal"
+                          sx={{
+                            bg: colors.gray,
+                          }}
+                        />
+                      </Block>
+                    ) : (
+                      <></>
+                    )}
+
+                    <Block row padding={sizes.s}>
+                      <View style={{ width: "70%", flexDirection: "row" }}>
+                        <Pressable
+                          onPress={() =>
+                            navigation.navigate("DetailsPage", {
+                              symb: item.Symbol,
+                            })
+                          }
+                        >
+                          <Text semibold info>
+                            {item.Symbol}
+                          </Text>
+                        </Pressable>
+                        <Text marginLeft={sizes.s} gray>
+                          {item.Name}
+                        </Text>
+                      </View>
+                      <View style={{ width: "30%", alignItems: "flex-end" }}>
+                        <Text danger>{item.ChangesPercentage}%</Text>
                       </View>
                     </Block>
                   </Block>

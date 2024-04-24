@@ -3,7 +3,7 @@ import { ScrollView, Pressable } from "react-native";
 import CommonDataService from "../services/common-data-service";
 import Block from "./Block";
 import Text from "./Text";
-import { useTheme } from "../hooks";
+import { useTheme, useTranslation } from "../hooks";
 import { useNavigation } from "@react-navigation/core";
 import Sparkline from "./Charts/Sparkline";
 import NumberWithCommas from "./NumberWithCommas";
@@ -26,6 +26,7 @@ export default function WatchlistCard(props) {
   const [info, setInfo] = useState();
   const { sizes, colors, gradients, assets } = useTheme();
   const navigation = useNavigation();
+  const { locale, t } = useTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => {
@@ -42,14 +43,17 @@ export default function WatchlistCard(props) {
           navigation.navigate("DetailsPage", { symb: props.data.code })
         }
       >
-        <Block card marginVertical={sizes.xs}>
-          <Block row align="center">
+        <Block card marginVertical={sizes.xs} style={{ minWidth: "100%" }}>
+          <Block
+            align="center"
+            style={{ flexDirection: locale === "ar" ? "row-reverse" : "row" }}
+          >
             <Block width={100}>
               <Text info>{props.data.code}</Text>
               <Text>{props.data.name}</Text>
             </Block>
             <Block marginHorizontal={sizes.s}>
-              <Text gray>Last Price</Text>
+              <Text gray>{t("lastPrice")}</Text>
               <Text>{props.data.lastPrice}</Text>
             </Block>
             <Block marginHorizontal={sizes.s}>
@@ -62,7 +66,7 @@ export default function WatchlistCard(props) {
                 trigger={(triggerProps) => {
                   return (
                     <Pressable onPress={() => handleOpen()} {...triggerProps}>
-                      <Text gray>Valuation</Text>
+                      <Text gray>{t("valuation")}</Text>
                     </Pressable>
                   );
                 }}
@@ -115,7 +119,7 @@ export default function WatchlistCard(props) {
               <Sparkline
                 data={props.data.prices}
                 trend={props.data.oneMonthChange}
-              />
+              /> 
             </Block>
           </Block>
         </Block>
